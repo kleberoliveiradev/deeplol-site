@@ -292,6 +292,22 @@ details p .tw-cursor{display:inline-block;width:8px;height:1.05em;margin-left:2p
 .sup .wa:hover{background:#30d158;color:#0a0a0c}
 .sup .wa svg{width:18px;height:18px}
 @media (max-width:640px){.sup{right:16px;left:16px;width:auto;bottom:calc(80px + env(safe-area-inset-bottom,0px));height:min(560px,calc(100vh - 110px))}.sup-btn span.t{display:none}.sup-btn{padding:14px 16px}}
+
+/* ===== cursor e barra de rolagem estilo HUD de jogo ===== */
+@media (hover:hover) and (pointer:fine){
+  html,body{cursor:url("assets/cursor/arrow.svg") 2 2,auto}
+  a,button,summary,label,[role="button"],.switch,.chips button{cursor:url("assets/cursor/pointer.svg") 2 2,pointer}
+  input,textarea{cursor:text}
+}
+html{scrollbar-width:thin;scrollbar-color:#a87a2c #0a0a0c}
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-track{background:#0a0a0c;border-left:1px solid rgba(226,182,90,.18)}
+::-webkit-scrollbar-thumb{background:linear-gradient(90deg,#5e3f12,#e2b65a 45%,#a87a2c 70%,#5e3f12);border:3px solid #0a0a0c;border-top-width:4px;border-bottom-width:4px;
+  clip-path:polygon(50% 0,100% 6px,100% calc(100% - 6px),50% 100%,0 calc(100% - 6px),0 6px)}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(90deg,#3f5604,#d4ff4f 45%,#8fc20a 70%,#3f5604)}
+::-webkit-scrollbar-corner{background:#0a0a0c}
+.sup .log::-webkit-scrollbar{width:6px}
+.sup .log::-webkit-scrollbar-thumb{border-width:1px}
 /* ===== interações: hover fluido + pixels ===== */
 @property --glow{syntax:'<number>';inherits:true;initial-value:0}
 :root{--ease:cubic-bezier(.22,1,.36,1)}
