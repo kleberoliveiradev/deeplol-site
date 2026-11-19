@@ -59,7 +59,6 @@ h2.title{font-size:clamp(44px,6vw,72px);text-transform:uppercase;margin:20px 0}
 
 /* nav */
 html{scroll-padding-top:110px}
-main{padding-top:72px}
 .topbar{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:0;right:0;z-index:70;pointer-events:none}
 .topbar .wrap{display:flex;justify-content:center}
 .nav{position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:44px;pointer-events:auto;padding:9px 9px 9px 24px}
@@ -87,7 +86,7 @@ main{padding-top:72px}
 .menu .actions .btn{padding:12px 10px}
 
 /* hero */
-.hero{padding:88px 0 0}
+.hero{padding:160px 0 0}
 .hero-top{display:grid;grid-template-columns:1fr 392px;gap:48px;align-items:end}
 .hero h1{font-size:clamp(56px,8.6vw,108px);line-height:.96;text-transform:uppercase;margin:24px 0 28px}
 .hero .sub{font-size:20px}
@@ -225,7 +224,7 @@ footer{border-top:1px solid var(--line);padding:48px 0}
 }
 @media (max-width:640px){
   .wrap{padding:0 16px}
-  .hero{padding-top:48px}
+  .hero{padding-top:112px}
   .mods{grid-template-columns:1fr 1fr}
   .nums{grid-template-columns:1fr}
   section.block{padding:80px 0 24px}
@@ -239,13 +238,13 @@ footer{border-top:1px solid var(--line);padding:48px 0}
 
 /* vídeo de fundo da hero (aparece só quando assets/hero.mp4 existir) */
 .hero{position:relative;isolation:isolate}
-.hero-media{position:absolute;left:0;right:0;top:-72px;height:calc(100% + 72px);z-index:-1;overflow:hidden;opacity:0;transition:opacity 1.2s var(--ease)}
+.hero-media{position:absolute;left:0;right:0;top:0;height:max(100vh,820px);z-index:-1;overflow:hidden;opacity:0;transition:opacity 1.2s var(--ease)}
 .hero.has-video .hero-media{opacity:1}
 .hero-media .yt{position:absolute;inset:0}
-.hero-media iframe{position:absolute;left:50%;top:50%;border:0;pointer-events:none;transform:translate(-50%,-50%) scale(1.15);filter:saturate(.85) contrast(1.05)}
+.hero-media iframe{position:absolute;left:50%;top:50%;border:0;pointer-events:none;transform:translate(-50%,-50%) scale(1.04);filter:saturate(.85) contrast(1.05)}
 .hero-media::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(10,10,12,.92) 0%,rgba(10,10,12,.7) 45%,rgba(10,10,12,.55) 100%),linear-gradient(to bottom,rgba(10,10,12,.35) 0%,rgba(10,10,12,0) 30%,rgba(10,10,12,.6) 70%,var(--bg) 100%);
-  background-image:linear-gradient(90deg,rgba(10,10,12,.92) 0%,rgba(10,10,12,.7) 45%,rgba(10,10,12,.55) 100%),linear-gradient(to bottom,rgba(10,10,12,.35) 0%,rgba(10,10,12,0) 30%,rgba(10,10,12,.6) 70%,var(--bg) 100%)}
+  background:linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.6) 45%,rgba(10,10,12,.35) 100%),linear-gradient(to bottom,rgba(10,10,12,.2) 0%,rgba(10,10,12,0) 30%,rgba(10,10,12,.6) 70%,var(--bg) 100%);
+  background-image:linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.6) 45%,rgba(10,10,12,.35) 100%),linear-gradient(to bottom,rgba(10,10,12,.2) 0%,rgba(10,10,12,0) 30%,rgba(10,10,12,.6) 70%,var(--bg) 100%)}
 /* ===== interações: hover fluido + pixels ===== */
 @property --glow{syntax:'<number>';inherits:true;initial-value:0}
 :root{--ease:cubic-bezier(.22,1,.36,1)}
@@ -556,7 +555,7 @@ mods.forEach(([t,d],i)=>{const el=document.createElement('div');el.className='pa
   const id=box.dataset.id,f=document.createElement('iframe');
   f.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&playsinline=1&rel=0&disablekb=1&iv_load_policy=3&modestbranding=1&start=8`;
   f.title='Trailer oficial de League of Legends';f.setAttribute('tabindex','-1');f.allow='autoplay; encrypted-media';
-  const fit=()=>{const w=box.clientWidth,h=box.clientHeight;f.style.width=Math.max(w,h*16/9)+'px';f.style.height=Math.max(h,w*9/16)+'px'};
+  const R=2.4,fit=()=>{const w=box.clientWidth,h=box.clientHeight,W=Math.max(w,h*R);f.style.width=W+'px';f.style.height=(W*9/16)+'px'};
   f.addEventListener('load',()=>setTimeout(()=>box.closest('.hero').classList.add('has-video'),1800));
   box.appendChild(f);fit();addEventListener('resize',fit);
 })();
