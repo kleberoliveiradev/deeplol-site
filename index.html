@@ -61,6 +61,7 @@ h2.title{font-size:clamp(44px,6vw,72px);text-transform:uppercase;margin:20px 0}
 html{scroll-padding-top:110px}
 main{padding-top:72px}
 .topbar{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:0;right:0;z-index:70;pointer-events:none}
+.topbar .wrap{display:flex;justify-content:center}
 .nav{position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:44px;pointer-events:auto;padding:9px 9px 9px 24px}
 .nav::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(24,24,27,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   clip-path:polygon(12px 0,100% 0,100% 100%,8px 100%,0 calc(100% - 8px),0 12px)}
@@ -74,7 +75,7 @@ main{padding-top:72px}
 .menu-btn span:nth-child(2){transform:translateY(5px)}
 .nav.open .menu-btn span:nth-child(1){transform:rotate(45deg)}
 .nav.open .menu-btn span:nth-child(2){transform:rotate(-45deg)}
-.menu{position:absolute;top:calc(100% + 8px);left:0;width:max(100%,320px);background:rgba(24,24,27,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:22px 24px 24px;
+.menu{position:absolute;top:calc(100% + 8px);left:50%;margin-left:calc(max(100%,320px) / -2);width:max(100%,320px);background:rgba(24,24,27,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:22px 24px 24px;
   clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);border-left:4px solid var(--lime);
   opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s .45s}
 .nav.open .menu{opacity:1;visibility:visible;transform:none;transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s}
@@ -281,7 +282,7 @@ details[open].fx:hover summary::after{transform:none}
 .f1 ul a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--lime);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
 .f1 ul a:hover::after{transform:scaleX(1);transform-origin:left}
 /* telas do app */
-.shot{transition:transform .7s var(--ease),box-shadow .7s var(--ease),border-color .5s var(--ease)}
+.shot{will-change:translate;transition:transform .7s var(--ease),box-shadow .7s var(--ease),border-color .5s var(--ease)}
 .feature .shot:hover,.evo:hover .shot{transform:translateY(-6px) scale(1.012);border-color:rgba(184,246,13,.45);box-shadow:0 34px 80px rgba(0,0,0,.6),0 0 0 1px rgba(184,246,13,.15),0 0 60px -20px rgba(184,246,13,.45)}
 .shot::before{transition:width .6s var(--ease)}
 .feature .shot:hover::before,.evo:hover .shot::before{width:200px}
@@ -566,6 +567,37 @@ document.querySelectorAll('.panel').forEach(el=>{
   el.classList.add('fx');
   el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')});
 });
+// ===== rolagem em parallax =====
+(()=>{
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const small=()=>innerWidth<640;
+  // fundo de grade rola na metade da velocidade
+  window.GRID_SPEED=.5;
+  const layers=[
+    ['.hero-top>div:first-child',.1],['.hero-top>div:last-child',-.08],['.product .shot',.06],
+    ['.feature .text',.05],['.feature .shot',-.05],['.evo .shot',-.04],['.cta h2',.06]
+  ];
+  const items=[];
+  layers.forEach(([sel,sp])=>document.querySelectorAll(sel).forEach(el=>items.push({el,sp})));
+  // cabeçalhos de seção (rótulo + título + subtítulo) andam juntos
+  document.querySelectorAll('h2.title').forEach(h=>{if(h.closest('.cta,.hero'))return;
+    [h.previousElementSibling,h,h.nextElementSibling].forEach(el=>{if(el&&(el===h||el.matches('.label,.sub'))&&!items.some(i=>i.el===el))items.push({el,sp:.05})})});
+  let ticking=false;
+  function update(){
+    ticking=false;const vh=innerHeight,k=small()?.5:1;
+    document.body.style.backgroundPositionY=(scrollY*.5)+'px';
+    for(const it of items){
+      const r=it.el.getBoundingClientRect();
+      if(r.bottom<-200||r.top>vh+200)continue;
+      // a posição usa o centro sem o deslocamento atual, para não acumular
+      const cur=it.y||0, c=r.top-cur+r.height/2-vh/2;
+      it.y=Math.round(-c*it.sp*k*10)/10;
+      it.el.style.translate='0 '+it.y+'px';
+    }
+  }
+  const req=()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}};
+  addEventListener('scroll',req,{passive:true});addEventListener('resize',req);update();
+})();
 // ===== pixels seguindo o mouse, presos à grade de 40px do layout =====
 (()=>{
   const fine=matchMedia('(hover:hover) and (pointer:fine)').matches, calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -574,12 +606,12 @@ document.querySelectorAll('.panel').forEach(el=>{
   const x=c.getContext('2d');let W,H,dpr;
   const size=()=>{dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0)};
   size();addEventListener('resize',size);
-  const G=40,P=8,cells=new Map(),dots=[];let mx=-999,my=-999,lx=null,ly=null,run=false;
+  const GRID=window.GRID_SPEED||1,G=40,P=8,cells=new Map(),dots=[];let mx=-999,my=-999,lx=null,ly=null,run=false;
   const kick=()=>{if(!run){run=true;requestAnimationFrame(tick)}};
   addEventListener('pointermove',e=>{
     mx=e.clientX;my=e.clientY;
     // acende a célula da grade sob o cursor (a grade rola junto com a página)
-    const sy=scrollY, gx=Math.floor(mx/G), gy=Math.floor((my+sy)/G), k=gx+','+gy;
+    const sy=scrollY, gs=sy*GRID, gx=Math.floor(mx/G), gy=Math.floor((my+gs)/G), k=gx+','+gy;
     cells.set(k,{gx,gy,a:1});
     // solta pixels de 8px alinhados à grade ao longo do caminho
     if(lx!==null){const d=Math.hypot(mx-lx,my-ly),n=Math.min(6,Math.floor(d/10));
@@ -592,7 +624,7 @@ document.querySelectorAll('.panel').forEach(el=>{
     x.clearRect(0,0,W,H);const sy=scrollY;
     // células da grade
     for(const [k,o] of cells){o.a-=.035;if(o.a<=0){cells.delete(k);continue}
-      const X=o.gx*G,Y=o.gy*G-sy;
+      const X=o.gx*G,Y=o.gy*G-sy*GRID;
       x.fillStyle=`rgba(184,246,13,${o.a*.06})`;x.fillRect(X+1,Y+1,G-1,G-1);
       x.strokeStyle=`rgba(184,246,13,${o.a*.35})`;x.lineWidth=1;x.strokeRect(X+.5,Y+.5,G,G);
       // cantos de mira, como nos cards do HUD
