@@ -217,6 +217,57 @@ footer{border-top:1px solid var(--line);padding:48px 0}
   .product .shot{width:calc(100% - 16px);margin-top:8px}
 }
 @media (prefers-reduced-motion:reduce){.wave b{animation:none}html{scroll-behavior:auto}}
+
+/* ===== interações: hover fluido + pixels ===== */
+@property --glow{syntax:'<number>';inherits:true;initial-value:0}
+:root{--ease:cubic-bezier(.22,1,.36,1)}
+.panel{--mx:50%;--my:50%;
+  background:radial-gradient(420px circle at var(--mx) var(--my),rgba(184,246,13,calc(var(--glow)*.10)),transparent 60%),var(--card);
+  transition:transform .5s var(--ease),--glow .45s var(--ease),filter .5s var(--ease)}
+.plan.hi{background:radial-gradient(420px circle at var(--mx) var(--my),rgba(184,246,13,calc(var(--glow)*.12)),transparent 60%),var(--card2)}
+.panel.fx:hover{--glow:1;transform:translateY(-4px);filter:drop-shadow(0 18px 30px rgba(0,0,0,.45))}
+.panel .mark{transition:width .5s var(--ease)}
+.panel.fx:hover .mark{width:72px}
+.panel.bar::before{transition:width .5s var(--ease),box-shadow .5s var(--ease)}
+.panel.bar.fx:hover::before{box-shadow:0 0 18px rgba(184,246,13,.6)}
+.mod .prev b{transition:opacity .45s var(--ease),transform .5s var(--ease),text-shadow .5s var(--ease);transform-origin:left bottom}
+.mod.fx:not(.off):hover .prev b{opacity:1;transform:scale(1.08);text-shadow:0 0 24px rgba(184,246,13,.35)}
+.mod .prev{transition:background .45s var(--ease)}
+.mod.fx:hover .prev{background:#26262b}
+.plan.fx:hover{transform:translateY(-6px)}
+.plan.hi.fx:hover{outline-color:#d4ff4f}
+details.fx:hover{transform:translateX(4px)}
+details summary::after{transition:transform .4s var(--ease)}
+details.fx:hover summary::after{transform:rotate(90deg)}
+details[open].fx:hover summary::after{transform:none}
+/* botões: preenchimento deslizante + brilho */
+.btn{position:relative;overflow:hidden;isolation:isolate;transition:transform .45s var(--ease),background .35s var(--ease),color .35s var(--ease),box-shadow .45s var(--ease),border-color .35s var(--ease)}
+.btn.secondary::before,.btn.ghost::before{content:"";position:absolute;inset:0;background:var(--lime);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);z-index:-1}
+.btn.secondary:hover,.btn.ghost:hover{color:#0a0a0c;background:transparent}
+.btn.ghost:hover{border-color:var(--lime)}
+.btn.secondary:hover::before,.btn.ghost:hover::before{transform:scaleX(1)}
+.btn.primary::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:left .7s var(--ease);z-index:-1}
+.btn.primary:hover::after{left:130%}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px -8px rgba(184,246,13,.55)}
+.btn:active{transform:translateY(0) scale(.98);transition-duration:.12s}
+/* links do menu e rodapé */
+.nav ul a,.f1 ul a{position:relative;transition:color .35s var(--ease)}
+.nav ul a::after,.f1 ul a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--lime);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+.nav ul a:hover::after,.f1 ul a:hover::after{transform:scaleX(1);transform-origin:left}
+/* telas do app */
+.shot{transition:transform .7s var(--ease),box-shadow .7s var(--ease),border-color .5s var(--ease)}
+.feature .shot:hover,.evo:hover .shot{transform:translateY(-6px) scale(1.012);border-color:rgba(184,246,13,.45);box-shadow:0 34px 80px rgba(0,0,0,.6),0 0 0 1px rgba(184,246,13,.15),0 0 60px -20px rgba(184,246,13,.45)}
+.shot::before{transition:width .6s var(--ease)}
+.feature .shot:hover::before,.evo:hover .shot::before{width:200px}
+.status span,.chip{transition:background .35s var(--ease),color .35s var(--ease)}
+.switch{transition:background .35s var(--ease),transform .3s var(--ease)}
+.switch:hover{transform:scale(1.08)}
+.switch::after{transition:right .4s var(--ease)}
+/* camada de pixels */
+#px{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+@media (hover:none),(pointer:coarse){#px{display:none}.panel.fx:hover,.plan.fx:hover,details.fx:hover{transform:none;filter:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}#px{display:none}}
 </style>
 </head>
 <body>
@@ -465,6 +516,50 @@ const grid=document.getElementById('mods');
 mods.forEach(([t,d],i)=>{const el=document.createElement('div');el.className='panel mod';el.innerHTML=`<div class="prev"><span class="mark"></span><b>${String(i+1).padStart(2,'0')}</b></div><div class="body"><div class="t"><h3>${t}</h3><button class="switch" aria-label="Ligar ou desligar ${t}" aria-pressed="true"></button></div><p>${d}</p></div>`;el.querySelector('.switch').onclick=e=>{const off=el.classList.toggle('off');e.currentTarget.setAttribute('aria-pressed',!off)};grid.appendChild(el)});
 // fecha menu ao clicar num link
 document.querySelectorAll('.nav ul a').forEach(a=>a.onclick=()=>document.getElementById('nav').classList.remove('open'));
+// ===== hover fluido: brilho que segue o mouse dentro dos cards =====
+document.querySelectorAll('.panel').forEach(el=>{
+  el.classList.add('fx');
+  el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')});
+});
+// ===== pixels seguindo o mouse, presos à grade de 40px do layout =====
+(()=>{
+  const fine=matchMedia('(hover:hover) and (pointer:fine)').matches, calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(!fine||calm)return;
+  const c=document.createElement('canvas');c.id='px';c.setAttribute('aria-hidden','true');document.body.appendChild(c);
+  const x=c.getContext('2d');let W,H,dpr;
+  const size=()=>{dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0)};
+  size();addEventListener('resize',size);
+  const G=40,P=8,cells=new Map(),dots=[];let mx=-999,my=-999,lx=null,ly=null,run=false;
+  const kick=()=>{if(!run){run=true;requestAnimationFrame(tick)}};
+  addEventListener('pointermove',e=>{
+    mx=e.clientX;my=e.clientY;
+    // acende a célula da grade sob o cursor (a grade rola junto com a página)
+    const sy=scrollY, gx=Math.floor(mx/G), gy=Math.floor((my+sy)/G), k=gx+','+gy;
+    cells.set(k,{gx,gy,a:1});
+    // solta pixels de 8px alinhados à grade ao longo do caminho
+    if(lx!==null){const d=Math.hypot(mx-lx,my-ly),n=Math.min(6,Math.floor(d/10));
+      for(let i=0;i<n;i++){const t=i/n,px=lx+(mx-lx)*t+(Math.random()-.5)*18,py=ly+(my-ly)*t+(Math.random()-.5)*18;
+        dots.push({x:Math.round(px/P)*P,y:Math.round((py+sy)/P)*P,a:.9,s:Math.random()<.25?P:P/2,v:(Math.random()*.4+.2)})}}
+    lx=mx;ly=my;if(dots.length>260)dots.splice(0,dots.length-260);kick();
+  },{passive:true});
+  document.addEventListener('pointerleave',()=>{mx=my=-999;lx=ly=null});
+  function tick(){
+    x.clearRect(0,0,W,H);const sy=scrollY;
+    // células da grade
+    for(const [k,o] of cells){o.a-=.035;if(o.a<=0){cells.delete(k);continue}
+      const X=o.gx*G,Y=o.gy*G-sy;
+      x.fillStyle=`rgba(184,246,13,${o.a*.06})`;x.fillRect(X+1,Y+1,G-1,G-1);
+      x.strokeStyle=`rgba(184,246,13,${o.a*.35})`;x.lineWidth=1;x.strokeRect(X+.5,Y+.5,G,G);
+      // cantos de mira, como nos cards do HUD
+      x.fillStyle=`rgba(184,246,13,${o.a*.9})`;x.fillRect(X,Y,6,2);x.fillRect(X,Y,2,6);x.fillRect(X+G-5,Y+G-1,6,2);x.fillRect(X+G-1,Y+G-5,2,6)}
+    // pixels
+    for(let i=dots.length-1;i>=0;i--){const d=dots[i];d.a-=.022;d.y+=d.v;if(d.a<=0){dots.splice(i,1);continue}
+      x.fillStyle=`rgba(184,246,13,${d.a})`;x.fillRect(d.x,d.y-sy,d.s,d.s)}
+    // mira no cursor
+    if(mx>-999){x.fillStyle='rgba(184,246,13,.9)';x.fillRect(Math.round(mx/P)*P-1,Math.round(my/P)*P-1,3,3)}
+    if(cells.size||dots.length)requestAnimationFrame(tick);else{run=false;x.clearRect(0,0,W,H)}
+  }
+})();
 </script>
 </body>
 </html>
