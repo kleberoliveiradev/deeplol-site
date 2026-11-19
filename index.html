@@ -572,6 +572,37 @@ document.querySelectorAll('.panel').forEach(el=>{
   el.classList.add('fx');
   el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')});
 });
+// ===== rolagem suave com inércia (só mouse/trackpad; toque fica nativo) =====
+(()=>{
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+  const root=document.documentElement;root.style.scrollBehavior='auto';
+  const EASE=.075;let target=scrollY,cur=scrollY,running=false,self=false;
+  const max=()=>root.scrollHeight-innerHeight;
+  const clamp=v=>Math.max(0,Math.min(max(),v));
+  function loop(){
+    cur+=(target-cur)*EASE;
+    if(Math.abs(target-cur)<.5){cur=target;running=false}
+    self=true;scrollTo(0,cur);
+    if(running)requestAnimationFrame(loop);
+  }
+  const go=y=>{target=clamp(y);if(!running){running=true;cur=scrollY;requestAnimationFrame(loop)}};
+  addEventListener('wheel',e=>{
+    if(e.ctrlKey||e.defaultPrevented)return;
+    e.preventDefault();
+    const d=e.deltaMode===1?e.deltaY*40:e.deltaMode===2?e.deltaY*innerHeight:e.deltaY;
+    go((running?target:scrollY)+d);
+  },{passive:false});
+  // teclado, barra de rolagem e links: mantém o alvo sincronizado
+  addEventListener('scroll',()=>{if(self){self=false;return}if(!running){target=cur=scrollY}},{passive:true});
+  // links internos deslizam com a mesma suavidade
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('a[href^="#"]');if(!a)return;
+    const id=a.getAttribute('href');if(id.length<2)return;
+    const el=document.querySelector(id);if(!el)return;
+    e.preventDefault();history.replaceState(null,'',id);
+    go(el.getBoundingClientRect().top+scrollY-(id==='#topo'?0:100));
+  });
+})();
 // ===== rolagem em parallax =====
 (()=>{
   if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
