@@ -54,15 +54,32 @@ h2.title{font-size:clamp(44px,6vw,72px);text-transform:uppercase;margin:20px 0}
 .btn.block{width:100%}
 
 /* nav */
-header{position:sticky;top:0;z-index:50;background:rgba(10,10,12,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:24px}
-.nav .logo img{height:22px;width:auto}
-.nav ul{display:flex;gap:36px;list-style:none}
-.nav ul a{font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7)}
-.nav ul a:hover{color:var(--lime)}
-.nav .actions{display:flex;gap:10px}
-.menu-btn{display:none;background:none;border:0;color:#fff;cursor:pointer;padding:8px}
-.menu-btn span{display:block;width:22px;height:2px;background:#fff;margin:5px 0}
+html{scroll-padding-top:110px}
+main{padding-top:72px}
+.topbar{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:0;right:0;z-index:70;pointer-events:none}
+.nav{position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:44px;pointer-events:auto;padding:9px 9px 9px 24px}
+.nav::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(24,24,27,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  clip-path:polygon(12px 0,100% 0,100% 100%,8px 100%,0 calc(100% - 8px),0 12px)}
+.nav .logo img{height:20px;width:auto}
+.menu-btn{position:relative;width:46px;height:46px;flex:none;border:0;cursor:pointer;background:var(--lime);display:grid;place-items:center;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:background .35s var(--ease),transform .35s var(--ease)}
+.menu-btn:hover{background:#d4ff4f}
+.menu-btn:active{transform:scale(.94)}
+.menu-btn span{position:absolute;left:14px;right:14px;height:2.5px;background:#0a0a0c;transition:transform .45s var(--ease),opacity .3s var(--ease)}
+.menu-btn span:nth-child(1){transform:translateY(-5px)}
+.menu-btn span:nth-child(2){transform:translateY(5px)}
+.nav.open .menu-btn span:nth-child(1){transform:rotate(45deg)}
+.nav.open .menu-btn span:nth-child(2){transform:rotate(-45deg)}
+.menu{position:absolute;top:calc(100% + 8px);left:0;width:max(100%,320px);background:rgba(24,24,27,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:22px 24px 24px;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);border-left:4px solid var(--lime);
+  opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s .45s}
+.nav.open .menu{opacity:1;visibility:visible;transform:none;transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s}
+.menu ul{list-style:none;display:grid;gap:4px}
+.menu ul a{display:flex;justify-content:space-between;align-items:center;font-family:Anton,Impact,sans-serif;font-size:26px;text-transform:uppercase;color:#fff;padding:6px 0}
+.menu ul a small{font-family:Jost,sans-serif;font-weight:700;font-size:11px;letter-spacing:.16em;color:var(--lime)}
+.menu ul a:hover{color:var(--lime)}
+.menu .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+.menu .actions .btn{padding:12px 10px}
 
 /* hero */
 .hero{padding:88px 0 0}
@@ -199,9 +216,6 @@ footer{border-top:1px solid var(--line);padding:48px 0}
   .hero-top{grid-template-columns:1fr}
   .nums{grid-template-columns:repeat(2,1fr)}
   .grid3,.plans,.grid2{grid-template-columns:1fr}
-  .nav ul,.nav .actions .ghost{display:none}
-  .menu-btn{display:block}
-  .nav.open ul{display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;background:var(--bg);padding:24px;gap:20px;border-bottom:1px solid var(--line)}
   .solution{flex-direction:column;align-items:flex-start;gap:20px}
 }
 @media (max-width:640px){
@@ -212,7 +226,6 @@ footer{border-top:1px solid var(--line);padding:48px 0}
   section.block{padding:80px 0 24px}
   .cta .panel{padding:56px 24px}
   .f2{flex-direction:column;align-items:flex-start}
-  .nav .actions .btn{padding:11px 14px}
   .product{margin-top:48px}
   .product .shot{width:calc(100% - 16px);margin-top:8px}
 }
@@ -251,9 +264,9 @@ details[open].fx:hover summary::after{transform:none}
 .btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px -8px rgba(184,246,13,.55)}
 .btn:active{transform:translateY(0) scale(.98);transition-duration:.12s}
 /* links do menu e rodapé */
-.nav ul a,.f1 ul a{position:relative;transition:color .35s var(--ease)}
-.nav ul a::after,.f1 ul a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--lime);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
-.nav ul a:hover::after,.f1 ul a:hover::after{transform:scaleX(1);transform-origin:left}
+.f1 ul a{position:relative;transition:color .35s var(--ease)}
+.f1 ul a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--lime);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+.f1 ul a:hover::after{transform:scaleX(1);transform-origin:left}
 /* telas do app */
 .shot{transition:transform .7s var(--ease),box-shadow .7s var(--ease),border-color .5s var(--ease)}
 .feature .shot:hover,.evo:hover .shot{transform:translateY(-6px) scale(1.012);border-color:rgba(184,246,13,.45);box-shadow:0 34px 80px rgba(0,0,0,.6),0 0 0 1px rgba(184,246,13,.15),0 0 60px -20px rgba(184,246,13,.45)}
@@ -272,21 +285,25 @@ details[open].fx:hover summary::after{transform:none}
 </head>
 <body>
 
-<header>
-  <nav class="wrap nav" id="nav">
-    <a class="logo" href="#topo" aria-label="DeepLoL, início"><img src="assets/logo.svg" alt="DeepLoL" width="172" height="22"></a>
-    <ul>
-      <li><a href="#como-funciona">Como funciona</a></li>
-      <li><a href="#modulos">Módulos</a></li>
-      <li><a href="#planos">Planos</a></li>
-      <li><a href="#duvidas">Dúvidas</a></li>
-    </ul>
-    <div class="actions">
-      <a class="btn ghost" href="#entrar">Entrar</a>
-      <a class="btn primary" href="#planos">Baixar grátis</a>
-      <button class="menu-btn" aria-label="Abrir menu" onclick="document.getElementById('nav').classList.toggle('open')"><span></span><span></span><span></span></button>
-    </div>
-  </nav>
+<header class="topbar">
+  <div class="wrap">
+    <nav class="nav" id="nav" aria-label="Menu principal">
+      <a class="logo" href="#topo" aria-label="DeepLoL, início"><img src="assets/logo.svg" alt="DeepLoL" width="156" height="20"></a>
+      <button class="menu-btn" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+      <div class="menu" id="menu">
+        <ul>
+          <li><a href="#como-funciona">Como funciona <small>02</small></a></li>
+          <li><a href="#modulos">Módulos <small>03</small></a></li>
+          <li><a href="#planos">Planos <small>05</small></a></li>
+          <li><a href="#duvidas">Dúvidas <small>06</small></a></li>
+        </ul>
+        <div class="actions">
+          <a class="btn secondary" href="#entrar">Entrar</a>
+          <a class="btn primary" href="#planos">Baixar grátis</a>
+        </div>
+      </div>
+    </nav>
+  </div>
 </header>
 
 <main id="topo">
@@ -515,7 +532,14 @@ const mods=[['Seleção de campeão','Ban sugerido, pick, matchup, runas e a fof
 const grid=document.getElementById('mods');
 mods.forEach(([t,d],i)=>{const el=document.createElement('div');el.className='panel mod';el.innerHTML=`<div class="prev"><span class="mark"></span><b>${String(i+1).padStart(2,'0')}</b></div><div class="body"><div class="t"><h3>${t}</h3><button class="switch" aria-label="Ligar ou desligar ${t}" aria-pressed="true"></button></div><p>${d}</p></div>`;el.querySelector('.switch').onclick=e=>{const off=el.classList.toggle('off');e.currentTarget.setAttribute('aria-pressed',!off)};grid.appendChild(el)});
 // fecha menu ao clicar num link
-document.querySelectorAll('.nav ul a').forEach(a=>a.onclick=()=>document.getElementById('nav').classList.remove('open'));
+// menu flutuante
+(()=>{const nav=document.getElementById('nav'),btn=document.getElementById('menu-btn');
+  const set=o=>{nav.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);btn.setAttribute('aria-label',o?'Fechar menu':'Abrir menu')};
+  btn.onclick=e=>{e.stopPropagation();set(!nav.classList.contains('open'))};
+  nav.querySelectorAll('.menu a').forEach(a=>a.addEventListener('click',()=>set(false)));
+  document.addEventListener('click',e=>{if(!nav.contains(e.target))set(false)});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){set(false);btn.focus()}});
+})();
 // ===== hover fluido: brilho que segue o mouse dentro dos cards =====
 document.querySelectorAll('.panel').forEach(el=>{
   el.classList.add('fx');
