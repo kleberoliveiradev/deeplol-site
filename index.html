@@ -245,6 +245,53 @@ footer{border-top:1px solid var(--line);padding:48px 0}
 .hero-media::after{content:"";position:absolute;inset:0;
   background:linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.6) 45%,rgba(10,10,12,.35) 100%),linear-gradient(to bottom,rgba(10,10,12,.2) 0%,rgba(10,10,12,0) 30%,rgba(10,10,12,.6) 70%,var(--bg) 100%);
   background-image:linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.6) 45%,rgba(10,10,12,.35) 100%),linear-gradient(to bottom,rgba(10,10,12,.2) 0%,rgba(10,10,12,0) 30%,rgba(10,10,12,.6) 70%,var(--bg) 100%)}
+
+
+/* faq: resposta digitada na hora */
+details p .tw-cursor{display:inline-block;width:8px;height:1.05em;margin-left:2px;vertical-align:-2px;background:var(--lime);animation:supPulse .8s steps(1) infinite}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* ===== suporte: chat com IA + WhatsApp ===== */
+.sup-btn{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:80;display:flex;align-items:center;gap:10px;border:0;cursor:pointer;
+  background:var(--lime);color:#0a0a0c;font-family:Anton,Impact,sans-serif;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:14px 20px 14px 16px;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);box-shadow:0 12px 30px rgba(0,0,0,.4);transition:transform .45s var(--ease),background .3s var(--ease)}
+.sup-btn:hover{transform:translateY(-3px);background:#d4ff4f}
+.sup-btn svg{width:20px;height:20px}
+.sup-btn .pulse{width:8px;height:8px;background:#0a0a0c;border-radius:50%;animation:supPulse 1.6s infinite}
+@keyframes supPulse{50%{opacity:.25}}
+.sup{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:81;width:min(390px,calc(100vw - 32px));height:min(580px,calc(100vh - 120px));
+  display:flex;flex-direction:column;background:#141417;border-left:4px solid var(--lime);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+  opacity:0;visibility:hidden;transform:translateY(16px) scale(.98);transform-origin:bottom right;transition:opacity .35s var(--ease),transform .5s var(--ease),visibility 0s .5s}
+.sup.open{opacity:1;visibility:visible;transform:none;transition:opacity .35s var(--ease),transform .5s var(--ease),visibility 0s}
+.sup header{display:flex;align-items:center;gap:12px;padding:16px 16px 14px 18px;border-bottom:1px solid var(--line);position:static;background:none;backdrop-filter:none}
+.sup header img{width:38px;height:38px;border-radius:9px}
+.sup header b{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:19px;display:block;line-height:1.1}
+.sup header small{font-weight:700;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--lime);display:flex;align-items:center;gap:6px}
+.sup header small::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+.sup .x{margin-left:auto;background:var(--card2);border:0;color:#fff;width:34px;height:34px;cursor:pointer;font-size:18px;transition:background .3s}
+.sup .x:hover{background:#2e2e33}
+.sup .log{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.msg{max-width:86%;padding:10px 13px;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word;animation:msgIn .45s var(--ease)}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}}
+.msg.bot{background:var(--card2);color:rgba(255,255,255,.9);align-self:flex-start;clip-path:polygon(0 0,100% 0,100% 100%,8px 100%,0 calc(100% - 8px))}
+.msg.me{background:var(--lime);color:#0a0a0c;font-weight:500;align-self:flex-end;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.msg.typing{display:flex;gap:4px;padding:14px}
+.msg.typing i{width:6px;height:6px;background:var(--lime);animation:supPulse 1s infinite}
+.msg.typing i:nth-child(2){animation-delay:.15s}.msg.typing i:nth-child(3){animation-delay:.3s}
+.sup .chips[hidden]{display:none}
+.sup .chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 12px}
+.sup .chips button{background:transparent;border:1px solid rgba(184,246,13,.4);color:var(--lime);font:600 12px Jost,sans-serif;padding:6px 10px;cursor:pointer;transition:background .3s,color .3s}
+.sup .chips button:hover{background:var(--lime);color:#0a0a0c}
+.sup form{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line)}
+.sup input{flex:1;min-width:0;background:#0d0d10;border:1px solid var(--line);color:#fff;font:15px Jost,sans-serif;padding:11px 12px;outline:none;transition:border-color .3s}
+.sup input:focus{border-color:var(--lime)}
+.sup form button{background:var(--lime);border:0;width:46px;cursor:pointer;display:grid;place-items:center;transition:background .3s}
+.sup form button:hover{background:#d4ff4f}
+.sup form button:disabled{opacity:.5;cursor:default}
+.sup .wa{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 14px 14px;padding:11px;background:#1f2a1f;border:1px solid rgba(48,209,88,.35);color:#30d158;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;transition:background .3s,color .3s}
+.sup .wa:hover{background:#30d158;color:#0a0a0c}
+.sup .wa svg{width:18px;height:18px}
+@media (max-width:640px){.sup{right:16px;left:16px;width:auto;bottom:calc(80px + env(safe-area-inset-bottom,0px));height:min(560px,calc(100vh - 110px))}.sup-btn span.t{display:none}.sup-btn{padding:14px 16px}}
 /* ===== interações: hover fluido + pixels ===== */
 @property --glow{syntax:'<number>';inherits:true;initial-value:0}
 :root{--ease:cubic-bezier(.22,1,.36,1)}
@@ -502,7 +549,7 @@ details[open].fx:hover summary::after{transform:none}
       <div>
         <span class="label"><i><b></b><b></b><b></b><b></b></i>[ 06 · Dúvidas ]</span>
         <h2 class="title">Perguntas<br><span class="lime">frequentes.</span></h2>
-        <p class="sub" style="max-width:360px">Não achou sua dúvida? Fale com a gente pelo suporte.</p>
+        <p class="sub" style="max-width:360px">Não achou sua dúvida? <a href="#suporte" class="lime" style="text-decoration:underline">Fale com o nosso suporte</a>.</p>
       </div>
       <div class="qs">
         <details class="panel" open><summary>O DeepLoL pode banir minha conta?</summary><p>Não. O DeepLoL não modifica o jogo nem os arquivos do cliente. Ele só lê as informações da partida que ficam disponíveis para apps de terceiros.</p></details>
@@ -540,6 +587,28 @@ details[open].fx:hover summary::after{transform:none}
   </div>
 </footer>
 
+<!-- SUPORTE -->
+<button class="sup-btn" id="sup-btn" aria-controls="sup" aria-expanded="false"><span class="pulse"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span class="t">Suporte</span></button>
+<section class="sup" id="sup" role="dialog" aria-label="Suporte DeepLoL" aria-modal="false">
+  <header>
+    <img src="assets/icon-192.png" alt="" width="38" height="38">
+    <div><b>Suporte DeepLoL</b><small>Assistente com IA · online</small></div>
+    <button class="x" id="sup-x" aria-label="Fechar suporte">✕</button>
+  </header>
+  <div class="log" id="sup-log" aria-live="polite"></div>
+  <div class="chips" id="sup-chips">
+    <button type="button">Quanto custa o Pro?</button>
+    <button type="button">Pode banir minha conta?</button>
+    <button type="button">Como funciona o teste grátis?</button>
+    <button type="button">Funciona no meu elo?</button>
+  </div>
+  <form id="sup-form" autocomplete="off">
+    <input id="sup-in" type="text" maxlength="600" placeholder="Digite sua dúvida..." aria-label="Sua mensagem">
+    <button type="submit" aria-label="Enviar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a0a0c" stroke-width="2.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </form>
+  <a class="wa" id="sup-wa" href="https://wa.me/5511969344941" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.6a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>Falar com a equipe no WhatsApp</a>
+</section>
+
 <script>
 // barras da voz
 const wave=document.querySelector('.wave');
@@ -572,6 +641,75 @@ document.querySelectorAll('.panel').forEach(el=>{
   el.classList.add('fx');
   el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')});
 });
+// ===== faq: resposta aparece como se estivesse sendo digitada =====
+(()=>{
+  const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  document.querySelectorAll('.qs details').forEach(d=>{
+    const p=d.querySelector('p');if(!p)return;
+    const full=p.textContent;let timer=null;
+    const sr=document.createElement('span');sr.className='sr-only';sr.textContent=full;
+    const vis=document.createElement('span');vis.setAttribute('aria-hidden','true');
+    p.textContent='';p.append(sr,vis);vis.textContent=full;
+    d.addEventListener('toggle',()=>{
+      clearTimeout(timer);
+      if(!d.open||calm){vis.textContent=full;return}
+      vis.textContent='';const cur=document.createElement('span');cur.className='tw-cursor';
+      let i=0;const step=()=>{
+        // digita 1 a 3 letras por vez, com pausas maiores em pontuação
+        const n=1+Math.floor(Math.random()*2);i=Math.min(full.length,i+n);
+        vis.textContent=full.slice(0,i);vis.appendChild(cur);
+        if(i<full.length){const ch=full[i-1];timer=setTimeout(step,/[.,:?!]/.test(ch)?140:14+Math.random()*22)}
+        else timer=setTimeout(()=>cur.remove(),900);
+      };step();
+    });
+  });
+})();
+// ===== suporte: chat com IA (Vercel /api/chat) + respostas de reserva =====
+(()=>{
+  const WA='5511969344941';
+  const box=document.getElementById('sup'),btn=document.getElementById('sup-btn'),log=document.getElementById('sup-log'),
+        form=document.getElementById('sup-form'),inp=document.getElementById('sup-in'),chips=document.getElementById('sup-chips'),wa=document.getElementById('sup-wa');
+  const hist=[];let busy=false,started=false;
+  const FAQ=[
+    [/pre[çc]o|valor|custa|quanto|plano|pro\b|anual|pagar|assin/i,'O DeepLoL tem 3 planos: Grátis (1 partida com o coach completo, sem cartão), Pro por R$ 10/mês com partidas ilimitadas, e Pro anual por R$ 90/ano, que sai a R$ 7,50 por mês. Não tem fidelidade.'],
+    [/ban|seguro|riot|proib|conta/i,'Não. O DeepLoL não modifica o jogo nem os arquivos do cliente. Ele só lê as informações da partida que ficam disponíveis para apps de terceiros.'],
+    [/gr[aá]tis|teste|testar|free/i,'No plano Grátis você joga 1 partida com o coach completo (pré-jogo, ao vivo e pós-jogo), sem precisar de cartão de crédito.'],
+    [/elo|ferro|bronze|prata|ouro|platina|esmeralda|diamante|mestre|desafiante/i,'Funciona em todos os elos, do Ferro ao Desafiante. As dicas se adaptam ao seu elo e à sua função.'],
+    [/voz|[aá]udio|falar|som/i,'A voz é opcional: você escolhe receber os avisos só na tela, só por voz ou nos dois.'],
+    [/celular|telefone|mobile|android|iphone/i,'Sim. No plano Pro, o modo celular mostra sua análise e o foco da próxima partida no telefone. O coach em si roda no computador.'],
+    [/cancel/i,'Pode cancelar quando quiser. O acesso continua até o fim do período pago.'],
+    [/m[oó]dulo|fun[cç][aã]o|faz|como funciona/i,'O DeepLoL te ajuda em 3 momentos: no pré-jogo (matchup, runas e build), durante a partida (coach por voz e opções de decisão) e no pós-jogo (resumo, erros e um foco para as próximas partidas). São 10 módulos que você liga e desliga.'],
+    [/baix|instal|download|windows|pc|computador/i,'O DeepLoL é um app para computador. Use o botão "Baixar grátis" no site para começar.']
+  ];
+  const local=q=>{for(const [re,a] of FAQ)if(re.test(q))return a;return 'Essa eu prefiro deixar com a nossa equipe. Toque em "Falar com a equipe no WhatsApp" logo abaixo que a gente te responde por lá.'};
+  const add=(text,who)=>{const d=document.createElement('div');d.className='msg '+who;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight;return d};
+  const open=o=>{box.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);
+    if(o&&!started){started=true;add('Oi! Sou o assistente do DeepLoL. Pode perguntar sobre o app, os planos ou como ele funciona na partida.','bot')}
+    if(o)setTimeout(()=>inp.focus({preventScroll:true}),300)};
+  btn.onclick=()=>open(!box.classList.contains('open'));
+  document.getElementById('sup-x').onclick=()=>{open(false);btn.focus()};
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&box.classList.contains('open'))open(false)});
+  document.querySelectorAll('a[href="#suporte"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();open(true)},true));
+  box.addEventListener('wheel',e=>e.stopPropagation(),{passive:true});
+  async function ask(q){
+    if(busy||!q.trim())return;busy=true;chips.hidden=true;form.querySelector('button').disabled=true;
+    add(q,'me');hist.push({role:'user',content:q});
+    const t=document.createElement('div');t.className='msg bot typing';t.innerHTML='<i></i><i></i><i></i>';log.appendChild(t);log.scrollTop=log.scrollHeight;
+    let reply;
+    try{
+      const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),25000);
+      const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:hist.slice(-12)}),signal:ctl.signal});
+      clearTimeout(to);
+      if(r.ok){const j=await r.json();reply=j.reply}
+    }catch(e){}
+    if(!reply)reply=local(q);
+    t.remove();add(reply,'bot');hist.push({role:'assistant',content:reply});
+    wa.href=`https://wa.me/${WA}?text=${encodeURIComponent('Olá! Vim pelo site do DeepLoL. Minha dúvida: '+q)}`;
+    busy=false;form.querySelector('button').disabled=false;inp.focus({preventScroll:true});
+  }
+  form.addEventListener('submit',e=>{e.preventDefault();const q=inp.value;inp.value='';ask(q)});
+  chips.querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
+})();
 // ===== rolagem suave com inércia (só mouse/trackpad; toque fica nativo) =====
 (()=>{
   if(matchMedia('(prefers-reduced-motion:reduce)').matches||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
