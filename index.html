@@ -241,7 +241,8 @@ footer{border-top:1px solid var(--line);padding:48px 0}
 .hero{position:relative;isolation:isolate}
 .hero-media{position:absolute;left:0;right:0;top:-72px;height:calc(100% + 72px);z-index:-1;overflow:hidden;opacity:0;transition:opacity 1.2s var(--ease)}
 .hero.has-video .hero-media{opacity:1}
-.hero-media video{width:100%;height:100%;object-fit:cover;filter:saturate(.85) contrast(1.05)}
+.hero-media .yt{position:absolute;inset:0}
+.hero-media iframe{position:absolute;left:50%;top:50%;border:0;pointer-events:none;transform:translate(-50%,-50%) scale(1.15);filter:saturate(.85) contrast(1.05)}
 .hero-media::after{content:"";position:absolute;inset:0;
   background:linear-gradient(90deg,rgba(10,10,12,.92) 0%,rgba(10,10,12,.7) 45%,rgba(10,10,12,.55) 100%),linear-gradient(to bottom,rgba(10,10,12,.35) 0%,rgba(10,10,12,0) 30%,rgba(10,10,12,.6) 70%,var(--bg) 100%);
   background-image:linear-gradient(90deg,rgba(10,10,12,.92) 0%,rgba(10,10,12,.7) 45%,rgba(10,10,12,.55) 100%),linear-gradient(to bottom,rgba(10,10,12,.35) 0%,rgba(10,10,12,0) 30%,rgba(10,10,12,.6) 70%,var(--bg) 100%)}
@@ -324,7 +325,7 @@ details[open].fx:hover summary::after{transform:none}
   <!-- HERO -->
   <section class="hero">
     <div class="hero-media" aria-hidden="true">
-      <video id="hero-video" muted loop playsinline autoplay preload="metadata"><source src="assets/hero.mp4" type="video/mp4"></video>
+      <div class="yt" id="hero-yt" data-id="I76wvt0aEE4"></div>
     </div>
     <div class="wrap">
       <div class="hero-top">
@@ -549,10 +550,15 @@ const mods=[['Seleção de campeão','Ban sugerido, pick, matchup, runas e a fof
 const grid=document.getElementById('mods');
 mods.forEach(([t,d],i)=>{const el=document.createElement('div');el.className='panel mod';el.innerHTML=`<div class="prev"><span class="mark"></span><b>${String(i+1).padStart(2,'0')}</b></div><div class="body"><div class="t"><h3>${t}</h3><button class="switch" aria-label="Ligar ou desligar ${t}" aria-pressed="true"></button></div><p>${d}</p></div>`;el.querySelector('.switch').onclick=e=>{const off=el.classList.toggle('off');e.currentTarget.setAttribute('aria-pressed',!off)};grid.appendChild(el)});
 // fecha menu ao clicar num link
-// vídeo da hero: só mostra se o arquivo carregar
-(()=>{const v=document.getElementById('hero-video');if(!v)return;
-  if(matchMedia('(prefers-reduced-motion:reduce)').matches){v.removeAttribute('autoplay');v.pause()}
-  v.addEventListener('loadeddata',()=>v.closest('.hero').classList.add('has-video'));
+// vídeo da hero: trailer oficial do LoL (YouTube, mudo e em loop)
+(()=>{const box=document.getElementById('hero-yt');if(!box)return;
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches||innerWidth<640)return;
+  const id=box.dataset.id,f=document.createElement('iframe');
+  f.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&playsinline=1&rel=0&disablekb=1&iv_load_policy=3&modestbranding=1&start=8`;
+  f.title='Trailer oficial de League of Legends';f.setAttribute('tabindex','-1');f.allow='autoplay; encrypted-media';
+  const fit=()=>{const w=box.clientWidth,h=box.clientHeight;f.style.width=Math.max(w,h*16/9)+'px';f.style.height=Math.max(h,w*9/16)+'px'};
+  f.addEventListener('load',()=>setTimeout(()=>box.closest('.hero').classList.add('has-video'),1800));
+  box.appendChild(f);fit();addEventListener('resize',fit);
 })();
 // menu flutuante
 (()=>{const nav=document.getElementById('nav'),btn=document.getElementById('menu-btn');
