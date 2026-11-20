@@ -293,21 +293,10 @@ details p .tw-cursor{display:inline-block;width:8px;height:1.05em;margin-left:2p
 .sup .wa svg{width:18px;height:18px}
 @media (max-width:640px){.sup{right:16px;left:16px;width:auto;bottom:calc(80px + env(safe-area-inset-bottom,0px));height:min(560px,calc(100vh - 110px))}.sup-btn span.t{display:none}.sup-btn{padding:14px 16px}}
 
-/* ===== cursor: mira HUD (desenhada pelo site; o cursor do sistema some só quando o script carrega) ===== */
-html.hud-cursor,html.hud-cursor *{cursor:none!important}
-html.hud-cursor input,html.hud-cursor textarea{cursor:text!important}
-.cur-dot,.cur-ring{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;will-change:transform}
-.cur-dot{width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--lime);box-shadow:0 0 0 1.5px #0a0a0c,0 0 10px rgba(184,246,13,.9)}
-.cur-ring{width:34px;height:34px;margin:-17px 0 0 -17px;filter:drop-shadow(0 0 1px #0a0a0c) drop-shadow(0 0 1px #0a0a0c);transition:width .35s var(--ease),height .35s var(--ease),margin .35s var(--ease),opacity .3s}
-.cur-ring i{position:absolute;width:9px;height:9px;border:2px solid var(--lime);transition:border-color .3s}
-.cur-ring i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
-.cur-ring i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
-.cur-ring i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
-.cur-ring i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
-.cur-ring.hover{width:54px;height:54px;margin:-27px 0 0 -27px}
-.cur-ring.hover i{border-color:#fff}
-.cur-ring.down{width:24px;height:24px;margin:-12px 0 0 -12px}
-.cur-hide{opacity:0}
+/* ===== cursor no estilo de jogo: seta lapidada e manopla (arte própria) ===== */
+html,body{cursor:url("assets/cursor/arrow.svg") 3 2,auto}
+a,button,summary,label,[role="button"],.btn,.switch,.chips button,.sup-btn,.menu-btn{cursor:url("assets/cursor/hand.svg") 4 4,pointer!important}
+input,textarea{cursor:text}
 html{scrollbar-width:thin;scrollbar-color:#a87a2c #0a0a0c}
 ::-webkit-scrollbar{width:12px;height:12px}
 ::-webkit-scrollbar-track{background:#0a0a0c;border-left:1px solid rgba(226,182,90,.18)}
@@ -809,26 +798,6 @@ document.querySelectorAll('.panel').forEach(el=>{
   }
   const req=()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}};
   addEventListener('scroll',req,{passive:true});addEventListener('resize',req);update();
-})();
-// ===== cursor: mira HUD que segue o mouse com leve atraso =====
-(()=>{
-  if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
-  const dot=document.createElement('div'),ring=document.createElement('div');
-  dot.className='cur-dot cur-hide';ring.className='cur-ring cur-hide';ring.innerHTML='<i></i><i></i><i></i><i></i>';
-  document.body.append(dot,ring);document.documentElement.classList.add('hud-cursor');
-  const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  let x=-100,y=-100,rx=-100,ry=-100,run=false;
-  const HOT='a,button,summary,label,[role="button"],.switch,input,textarea';
-  function loop(){rx+=(x-rx)*(calm?1:.22);ry+=(y-ry)*(calm?1:.22);
-    ring.style.transform=`translate3d(${rx}px,${ry}px,0)`;
-    if(Math.abs(x-rx)>.1||Math.abs(y-ry)>.1)requestAnimationFrame(loop);else run=false}
-  addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;x=e.clientX;y=e.clientY;
-    dot.style.transform=`translate3d(${x}px,${y}px,0)`;dot.classList.remove('cur-hide');ring.classList.remove('cur-hide');
-    ring.classList.toggle('hover',!!e.target.closest(HOT));
-    if(!run){run=true;requestAnimationFrame(loop)}},{passive:true});
-  document.addEventListener('pointerleave',()=>{dot.classList.add('cur-hide');ring.classList.add('cur-hide')});
-  addEventListener('pointerdown',()=>ring.classList.add('down'));
-  addEventListener('pointerup',()=>ring.classList.remove('down'));
 })();
 // ===== pixels seguindo o mouse, presos à grade de 40px do layout =====
 (()=>{
