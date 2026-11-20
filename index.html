@@ -293,12 +293,21 @@ details p .tw-cursor{display:inline-block;width:8px;height:1.05em;margin-left:2p
 .sup .wa svg{width:18px;height:18px}
 @media (max-width:640px){.sup{right:16px;left:16px;width:auto;bottom:calc(80px + env(safe-area-inset-bottom,0px));height:min(560px,calc(100vh - 110px))}.sup-btn span.t{display:none}.sup-btn{padding:14px 16px}}
 
-/* ===== cursor e barra de rolagem estilo HUD de jogo ===== */
-@media (hover:hover) and (pointer:fine){
-  html,body{cursor:url("assets/cursor/arrow.svg") 2 2,auto}
-  a,button,summary,label,[role="button"],.switch,.chips button{cursor:url("assets/cursor/pointer.svg") 2 2,pointer}
-  input,textarea{cursor:text}
-}
+/* ===== cursor: mira HUD (desenhada pelo site; o cursor do sistema some só quando o script carrega) ===== */
+html.hud-cursor,html.hud-cursor *{cursor:none!important}
+html.hud-cursor input,html.hud-cursor textarea{cursor:text!important}
+.cur-dot,.cur-ring{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;will-change:transform}
+.cur-dot{width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--lime);box-shadow:0 0 0 1.5px #0a0a0c,0 0 10px rgba(184,246,13,.9)}
+.cur-ring{width:34px;height:34px;margin:-17px 0 0 -17px;filter:drop-shadow(0 0 1px #0a0a0c) drop-shadow(0 0 1px #0a0a0c);transition:width .35s var(--ease),height .35s var(--ease),margin .35s var(--ease),opacity .3s}
+.cur-ring i{position:absolute;width:9px;height:9px;border:2px solid var(--lime);transition:border-color .3s}
+.cur-ring i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
+.cur-ring i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.cur-ring i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
+.cur-ring i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+.cur-ring.hover{width:54px;height:54px;margin:-27px 0 0 -27px}
+.cur-ring.hover i{border-color:#fff}
+.cur-ring.down{width:24px;height:24px;margin:-12px 0 0 -12px}
+.cur-hide{opacity:0}
 html{scrollbar-width:thin;scrollbar-color:#a87a2c #0a0a0c}
 ::-webkit-scrollbar{width:12px;height:12px}
 ::-webkit-scrollbar-track{background:#0a0a0c;border-left:1px solid rgba(226,182,90,.18)}
@@ -762,20 +771,32 @@ document.querySelectorAll('.panel').forEach(el=>{
   if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
   const small=()=>innerWidth<640;
   // fundo de grade rola na metade da velocidade
-  window.GRID_SPEED=.5;
+  window.GRID_SPEED=.35;
   const layers=[
-    ['.hero-top>div:first-child',.1],['.hero-top>div:last-child',-.08],['.product .shot',.06],
-    ['.feature .text',.05],['.feature .shot',-.05],['.evo .shot',-.04],['.cta h2',.06]
+    ['.hero-top>div:first-child',-.18],['.hero-top>div:last-child',-.32],['.product .shot',.12],['.hero-media',.45],
+    ['.feature .text',.12],['.feature .shot',-.14],['.evo .shot',-.1],['.cta h2',.16],['.cta .sub',.08]
   ];
   const items=[];
   layers.forEach(([sel,sp])=>document.querySelectorAll(sel).forEach(el=>items.push({el,sp})));
-  // cabeçalhos de seção (rótulo + título + subtítulo) andam juntos
+  // cabeçalhos de seção em camadas: rótulo mais rápido, título no meio, subtítulo mais lento
   document.querySelectorAll('h2.title').forEach(h=>{if(h.closest('.cta,.hero'))return;
-    [h.previousElementSibling,h,h.nextElementSibling].forEach(el=>{if(el&&(el===h||el.matches('.label,.sub'))&&!items.some(i=>i.el===el))items.push({el,sp:.05})})});
+    const pv=h.previousElementSibling,nx=h.nextElementSibling;
+    // o grupo anda junto (forte), sem um elemento cobrir o outro
+    [pv&&pv.matches('.label')?pv:null,h,nx&&nx.matches('.sub')?nx:null].forEach(el=>el&&items.push({el,sp:.2}));
+  });
+  // grupos de cards: cada coluna em uma velocidade, como uma onda
+  const wave=(sel,speeds)=>document.querySelectorAll(sel).forEach(g=>{
+    [...g.children].forEach((el,i)=>{const cols=getComputedStyle(g).gridTemplateColumns.split(' ').length||1;
+      items.push({el,sp:speeds[(i%cols)%speeds.length]})})});
+  wave('.grid3',[.1,-.02,.1]);
+  wave('.mods',[-.08,0,.08,0,-.08]);
+  wave('.plans',[.1,-.04,.1]);
+  wave('.nums',[.06,-.04,.06,-.04]);
+  const prod=document.querySelector('.product .shot');
   let ticking=false;
   function update(){
     ticking=false;const vh=innerHeight,k=small()?.5:1;
-    document.body.style.backgroundPositionY=(scrollY*.5)+'px';
+    document.body.style.backgroundPositionY=(scrollY*.65)+'px';
     for(const it of items){
       const r=it.el.getBoundingClientRect();
       if(r.bottom<-200||r.top>vh+200)continue;
@@ -783,10 +804,31 @@ document.querySelectorAll('.panel').forEach(el=>{
       const cur=it.y||0, c=r.top-cur+r.height/2-vh/2;
       it.y=Math.round(-c*it.sp*k*10)/10;
       it.el.style.translate='0 '+it.y+'px';
+      if(it.el===prod){const p=Math.max(0,Math.min(1,(vh-r.top)/(vh+r.height)));it.el.style.scale=String(1.06-p*.06);it.el.style.transformOrigin='50% 0'}
     }
   }
   const req=()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}};
   addEventListener('scroll',req,{passive:true});addEventListener('resize',req);update();
+})();
+// ===== cursor: mira HUD que segue o mouse com leve atraso =====
+(()=>{
+  if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+  const dot=document.createElement('div'),ring=document.createElement('div');
+  dot.className='cur-dot cur-hide';ring.className='cur-ring cur-hide';ring.innerHTML='<i></i><i></i><i></i><i></i>';
+  document.body.append(dot,ring);document.documentElement.classList.add('hud-cursor');
+  const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  let x=-100,y=-100,rx=-100,ry=-100,run=false;
+  const HOT='a,button,summary,label,[role="button"],.switch,input,textarea';
+  function loop(){rx+=(x-rx)*(calm?1:.22);ry+=(y-ry)*(calm?1:.22);
+    ring.style.transform=`translate3d(${rx}px,${ry}px,0)`;
+    if(Math.abs(x-rx)>.1||Math.abs(y-ry)>.1)requestAnimationFrame(loop);else run=false}
+  addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;x=e.clientX;y=e.clientY;
+    dot.style.transform=`translate3d(${x}px,${y}px,0)`;dot.classList.remove('cur-hide');ring.classList.remove('cur-hide');
+    ring.classList.toggle('hover',!!e.target.closest(HOT));
+    if(!run){run=true;requestAnimationFrame(loop)}},{passive:true});
+  document.addEventListener('pointerleave',()=>{dot.classList.add('cur-hide');ring.classList.add('cur-hide')});
+  addEventListener('pointerdown',()=>ring.classList.add('down'));
+  addEventListener('pointerup',()=>ring.classList.remove('down'));
 })();
 // ===== pixels seguindo o mouse, presos à grade de 40px do layout =====
 (()=>{
@@ -822,8 +864,6 @@ document.querySelectorAll('.panel').forEach(el=>{
     // pixels
     for(let i=dots.length-1;i>=0;i--){const d=dots[i];d.a-=.022;d.y+=d.v;if(d.a<=0){dots.splice(i,1);continue}
       x.fillStyle=`rgba(184,246,13,${d.a})`;x.fillRect(d.x,d.y-sy,d.s,d.s)}
-    // mira no cursor
-    if(mx>-999){x.fillStyle='rgba(184,246,13,.9)';x.fillRect(Math.round(mx/P)*P-1,Math.round(my/P)*P-1,3,3)}
     if(cells.size||dots.length)requestAnimationFrame(tick);else{run=false;x.clearRect(0,0,W,H)}
   }
 })();
