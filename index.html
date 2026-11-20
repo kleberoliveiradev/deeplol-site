@@ -728,24 +728,39 @@ document.querySelectorAll('.panel').forEach(el=>{
 (()=>{
   if(matchMedia('(prefers-reduced-motion:reduce)').matches||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
   const root=document.documentElement;root.style.scrollBehavior='auto';
-  const EASE=.075;let target=scrollY,cur=scrollY,running=false,self=false;
+  // TAU = tempo de "deslize" em segundos (maior = mais lento e mais fluido). Igual em monitores de 60 Hz ou 144 Hz.
+  const TAU=.38,WHEEL=.9;
+  let target=scrollY,cur=scrollY,running=false,self=false,last=0;
   const max=()=>root.scrollHeight-innerHeight;
   const clamp=v=>Math.max(0,Math.min(max(),v));
-  function loop(){
-    cur+=(target-cur)*EASE;
-    if(Math.abs(target-cur)<.5){cur=target;running=false}
+  function loop(t){
+    const dt=Math.min(.05,last?(t-last)/1000:1/60);last=t;
+    cur+=(target-cur)*(1-Math.exp(-dt/TAU));
+    if(Math.abs(target-cur)<.3){cur=target;running=false;last=0}
     self=true;scrollTo(0,cur);
     if(running)requestAnimationFrame(loop);
   }
-  const go=y=>{target=clamp(y);if(!running){running=true;cur=scrollY;requestAnimationFrame(loop)}};
+  const go=y=>{target=clamp(y);if(!running){running=true;cur=scrollY;last=0;requestAnimationFrame(loop)}};
+  const inside=el=>el&&el.closest&&el.closest('.sup .log,input,textarea,select');
   addEventListener('wheel',e=>{
-    if(e.ctrlKey||e.defaultPrevented)return;
+    if(e.ctrlKey||e.defaultPrevented||inside(e.target))return;
     e.preventDefault();
-    const d=e.deltaMode===1?e.deltaY*40:e.deltaMode===2?e.deltaY*innerHeight:e.deltaY;
+    const d=(e.deltaMode===1?e.deltaY*40:e.deltaMode===2?e.deltaY*innerHeight:e.deltaY)*WHEEL;
     go((running?target:scrollY)+d);
   },{passive:false});
-  // teclado, barra de rolagem e links: mantém o alvo sincronizado
+  // teclado também desliza
+  addEventListener('keydown',e=>{
+    if(e.defaultPrevented||e.altKey||e.ctrlKey||e.metaKey||inside(document.activeElement)||document.activeElement?.isContentEditable)return;
+    const vh=innerHeight*.85,base=running?target:scrollY;let y=null;
+    switch(e.key){case 'ArrowDown':y=base+140;break;case 'ArrowUp':y=base-140;break;
+      case 'PageDown':y=base+vh;break;case 'PageUp':y=base-vh;break;
+      case ' ':if(document.activeElement&&document.activeElement.closest('button,a,summary'))return;y=base+(e.shiftKey?-vh:vh);break;
+      case 'Home':y=0;break;case 'End':y=max();break;}
+    if(y!==null){e.preventDefault();go(y)}
+  });
+  // barra de rolagem arrastada: mantém o alvo sincronizado
   addEventListener('scroll',()=>{if(self){self=false;return}if(!running){target=cur=scrollY}},{passive:true});
+  addEventListener('resize',()=>{target=clamp(target)});
   // links internos deslizam com a mesma suavidade
   document.addEventListener('click',e=>{
     const a=e.target.closest('a[href^="#"]');if(!a)return;
