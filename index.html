@@ -775,32 +775,20 @@ document.querySelectorAll('.panel').forEach(el=>{
   if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
   const small=()=>innerWidth<640;
   // fundo de grade rola na metade da velocidade
-  window.GRID_SPEED=.35;
+  window.GRID_SPEED=.5;
   const layers=[
-    ['.hero-top>div:first-child',-.18],['.hero-top>div:last-child',-.32],['.product .shot',.12],['.hero-media',.45],
-    ['.feature .text',.12],['.feature .shot',-.14],['.evo .shot',-.1],['.cta h2',.16],['.cta .sub',.08]
+    ['.hero-top>div:first-child',.1],['.hero-top>div:last-child',-.08],['.product .shot',.06],
+    ['.feature .text',.05],['.feature .shot',-.05],['.evo .shot',-.04],['.cta h2',.06]
   ];
   const items=[];
   layers.forEach(([sel,sp])=>document.querySelectorAll(sel).forEach(el=>items.push({el,sp})));
-  // cabeçalhos de seção em camadas: rótulo mais rápido, título no meio, subtítulo mais lento
+  // cabeçalhos de seção (rótulo + título + subtítulo) andam juntos
   document.querySelectorAll('h2.title').forEach(h=>{if(h.closest('.cta,.hero'))return;
-    const pv=h.previousElementSibling,nx=h.nextElementSibling;
-    // o grupo anda junto (forte), sem um elemento cobrir o outro
-    [pv&&pv.matches('.label')?pv:null,h,nx&&nx.matches('.sub')?nx:null].forEach(el=>el&&items.push({el,sp:.2}));
-  });
-  // grupos de cards: cada coluna em uma velocidade, como uma onda
-  const wave=(sel,speeds)=>document.querySelectorAll(sel).forEach(g=>{
-    [...g.children].forEach((el,i)=>{const cols=getComputedStyle(g).gridTemplateColumns.split(' ').length||1;
-      items.push({el,sp:speeds[(i%cols)%speeds.length]})})});
-  wave('.grid3',[.1,-.02,.1]);
-  wave('.mods',[-.08,0,.08,0,-.08]);
-  wave('.plans',[.1,-.04,.1]);
-  wave('.nums',[.06,-.04,.06,-.04]);
-  const prod=document.querySelector('.product .shot');
+    [h.previousElementSibling,h,h.nextElementSibling].forEach(el=>{if(el&&(el===h||el.matches('.label,.sub'))&&!items.some(i=>i.el===el))items.push({el,sp:.05})})});
   let ticking=false;
   function update(){
     ticking=false;const vh=innerHeight,k=small()?.5:1;
-    document.body.style.backgroundPositionY=(scrollY*.65)+'px';
+    document.body.style.backgroundPositionY=(scrollY*.5)+'px';
     for(const it of items){
       const r=it.el.getBoundingClientRect();
       if(r.bottom<-200||r.top>vh+200)continue;
@@ -808,7 +796,6 @@ document.querySelectorAll('.panel').forEach(el=>{
       const cur=it.y||0, c=r.top-cur+r.height/2-vh/2;
       it.y=Math.round(-c*it.sp*k*10)/10;
       it.el.style.translate='0 '+it.y+'px';
-      if(it.el===prod){const p=Math.max(0,Math.min(1,(vh-r.top)/(vh+r.height)));it.el.style.scale=String(1.06-p*.06);it.el.style.transformOrigin='50% 0'}
     }
   }
   const req=()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}};
