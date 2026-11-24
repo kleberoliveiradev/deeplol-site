@@ -69,10 +69,8 @@ html{scroll-padding-top:96px}
 .nav .logo img{height:20px;width:auto;display:block}
 .links{display:flex;gap:6px;list-style:none;margin:0 auto;padding:0}
 .links a{position:relative;display:flex;align-items:baseline;gap:7px;padding:10px 14px;font-family:Jost,sans-serif;font-weight:500;font-size:15px;color:rgba(255,255,255,.72);transition:color .3s var(--ease)}
-.links a small{font-size:10px;font-weight:700;letter-spacing:.14em;color:rgba(184,246,13,.55);transition:color .3s var(--ease)}
 .links a::after{content:"";position:absolute;left:14px;right:14px;bottom:2px;height:2px;border-radius:2px;background:var(--lime);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
 .links a:hover,.links a.on{color:#fff}
-.links a:hover small,.links a.on small{color:var(--lime)}
 .links a:hover::after,.links a.on::after{transform:scaleX(1)}
 .nav-cta{display:flex;align-items:center;gap:20px;flex:none}
 .nav-cta .login{font-family:Jost,sans-serif;font-weight:500;font-size:15px;color:rgba(255,255,255,.8);transition:color .3s var(--ease)}
@@ -96,7 +94,6 @@ html{scroll-padding-top:96px}
   .sheet ol{list-style:none;margin:0;padding:0;display:grid}
   .sheet ol a{display:flex;align-items:baseline;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.08);font-family:Jost,sans-serif;font-weight:600;font-size:28px;color:#fff;
     opacity:0;transform:translateY(14px);transition:opacity .45s var(--ease),transform .55s var(--ease),color .3s}
-  .sheet ol a small{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--lime)}
   .sheet ol a:hover{color:var(--lime)}
   .topbar.open .sheet ol a{opacity:1;transform:none}
   .topbar.open .sheet ol li:nth-child(2) a{transition-delay:.05s}
@@ -393,10 +390,10 @@ details[open].fx:hover summary::after{transform:none}
     <nav class="nav" aria-label="Menu principal">
       <a class="logo" href="#topo" aria-label="DeepLoL, início"><img src="assets/logo.svg" alt="DeepLoL" width="156" height="20"></a>
       <ul class="links">
-        <li><a href="#como-funciona"><small>02</small>Como funciona</a></li>
-        <li><a href="#modulos"><small>03</small>Módulos</a></li>
-        <li><a href="#planos"><small>05</small>Planos</a></li>
-        <li><a href="#duvidas"><small>06</small>Dúvidas</a></li>
+        <li><a href="#como-funciona">Como funciona</a></li>
+        <li><a href="#modulos">Módulos</a></li>
+        <li><a href="#planos">Planos</a></li>
+        <li><a href="#duvidas">Dúvidas</a></li>
       </ul>
       <div class="nav-cta">
         <a class="login" href="#entrar">Entrar</a>
@@ -407,10 +404,10 @@ details[open].fx:hover summary::after{transform:none}
   </div>
   <div class="sheet" id="sheet">
     <ol>
-      <li><a href="#como-funciona"><small>02</small>Como funciona</a></li>
-      <li><a href="#modulos"><small>03</small>Módulos</a></li>
-      <li><a href="#planos"><small>05</small>Planos</a></li>
-      <li><a href="#duvidas"><small>06</small>Dúvidas</a></li>
+      <li><a href="#como-funciona">Como funciona</a></li>
+      <li><a href="#modulos">Módulos</a></li>
+      <li><a href="#planos">Planos</a></li>
+      <li><a href="#duvidas">Dúvidas</a></li>
     </ol>
     <div class="sheet-cta">
       <a class="pill" href="#planos"><span class="pulse" aria-hidden="true"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Baixar grátis</a>
