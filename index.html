@@ -117,7 +117,16 @@ html{scroll-padding-top:96px}
 .steps{display:flex;gap:6px}
 .steps b{flex:1;height:6px;background:rgba(255,255,255,.12)}
 .steps b:first-child{background:var(--lime)}
-.product{position:relative;margin-top:72px;height:min(56vw,720px);overflow:hidden}
+.product{position:relative;margin-top:72px;height:min(56vw,720px);clip-path:inset(-60vh -100vw 0 -100vw)}
+.hero-mark{display:none}
+@media (min-width:961px){
+  .hero-mark{display:block;position:absolute;z-index:0;left:50%;width:calc(100vw - 64px);margin-left:calc((100vw - 64px) / -2);top:calc(-1 * (100vw - 64px) * .085);pointer-events:none;
+    -webkit-mask-image:linear-gradient(180deg,#000 35%,rgba(0,0,0,.25) 75%,transparent);mask-image:linear-gradient(180deg,#000 35%,rgba(0,0,0,.25) 75%,transparent)}
+  .hero-mark img{display:block;width:100%;height:auto;opacity:.16}
+  .product .shot{z-index:1}
+  .f-mark{display:none}
+  footer{padding-bottom:48px}
+}
 .product::before{content:"";position:absolute;left:10%;right:10%;top:5%;height:70%;background:var(--lime);opacity:.14;filter:blur(140px);border-radius:50%}
 .product .shot{position:relative;width:calc(100% - 40px);margin:20px auto 0}
 .product::after{content:"";position:absolute;left:0;right:0;bottom:0;height:42%;background:linear-gradient(to bottom,rgba(10,10,12,0),var(--bg))}
@@ -435,6 +444,7 @@ details[open].fx:hover summary::after{transform:none}
         </div>
       </div>
       <div class="product">
+        <div class="hero-mark" aria-hidden="true"><img src="assets/logo.svg" alt="" width="460" height="60"></div>
         <img class="shot" src="assets/inicio.webp" alt="Tela inicial do app DeepLoL com perfil, nível, foco atual e atalhos para pré-jogo, durante a partida e pós-jogo" width="2880" height="1800">
       </div>
     </div>
@@ -798,7 +808,7 @@ document.querySelectorAll('.panel').forEach(el=>{
   // fundo de grade rola na metade da velocidade
   window.GRID_SPEED=.5;
   const layers=[
-    ['.hero-top>div:first-child',.1],['.hero-top>div:last-child',-.08],['.product .shot',.06],
+    ['.hero-top>div:first-child',.1],['.hero-top>div:last-child',-.08],['.product .shot',.06],['.hero-mark',-.04],
     ['.feature .text',.05],['.feature .shot',-.05],['.evo .shot',-.04],['.cta h2',.06]
   ];
   const items=[];
