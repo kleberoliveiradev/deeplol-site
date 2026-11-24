@@ -57,36 +57,63 @@ h2.title{font-size:clamp(44px,6vw,72px);text-transform:uppercase;margin:20px 0}
 .btn:hover{transform:translateY(-1px)}
 .btn.block{width:100%}
 
-/* nav */
-html{scroll-padding-top:110px}
-.topbar{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:0;right:0;z-index:70;pointer-events:none}
-.topbar .wrap{display:flex;justify-content:center}
-.nav{position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:44px;pointer-events:auto;padding:9px 9px 9px 24px}
-.nav::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(24,24,27,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  clip-path:polygon(12px 0,100% 0,100% 100%,8px 100%,0 calc(100% - 8px),0 12px)}
-.nav .logo img{height:20px;width:auto}
-.menu-btn{position:relative;width:46px;height:46px;flex:none;border:0;cursor:pointer;background:var(--lime);display:grid;place-items:center;
-  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:background .35s var(--ease),transform .35s var(--ease)}
-.menu-btn:hover{background:#d4ff4f}
-.menu-btn:active{transform:scale(.94)}
-.menu-btn span{position:absolute;left:14px;right:14px;height:2.5px;background:#0a0a0c;transition:transform .45s var(--ease),opacity .3s var(--ease)}
-.menu-btn span:nth-child(1){transform:translateY(-5px)}
-.menu-btn span:nth-child(2){transform:translateY(5px)}
-.nav.open .menu-btn span:nth-child(1){transform:rotate(45deg)}
-.nav.open .menu-btn span:nth-child(2){transform:rotate(-45deg)}
-.menu{position:absolute;top:calc(100% + 8px);left:50%;margin-left:calc(max(100%,320px) / -2);width:max(100%,320px);background:rgba(24,24,27,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:22px 24px 24px;
-  clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);border-left:4px solid var(--lime);
-  opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s .45s}
-.nav.open .menu{opacity:1;visibility:visible;transform:none;transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s}
-.menu ul{list-style:none;display:grid;gap:4px}
-.menu ul a{display:flex;justify-content:space-between;align-items:center;font-family:Anton,Impact,sans-serif;font-size:26px;text-transform:uppercase;color:#fff;padding:6px 0}
-.menu ul a small{font-family:Jost,sans-serif;font-weight:700;font-size:11px;letter-spacing:.16em;color:var(--lime)}
-.menu ul a:hover{color:var(--lime)}
-.menu .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
-.menu .actions .btn{padding:12px 10px}
+/* nav: barra de largura total, transparente no topo, sólida ao rolar */
+html{scroll-padding-top:96px}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:70;padding-top:env(safe-area-inset-top,0px);transition:background .5s var(--ease),border-color .5s var(--ease);border-bottom:1px solid transparent}
+.topbar::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,10,12,.75),rgba(10,10,12,0));transition:opacity .5s var(--ease)}
+.topbar.solid{background:rgba(10,10,12,.82);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);border-bottom-color:rgba(255,255,255,.07)}
+.topbar.solid::before{opacity:0}
+.topbar .prog{position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:var(--lime);transform-origin:left;transform:scaleX(var(--p,0));opacity:0;transition:opacity .4s var(--ease)}
+.topbar.solid .prog{opacity:1}
+.nav{display:flex;align-items:center;gap:32px;height:76px;transition:height .5s var(--ease)}
+.topbar.solid .nav{height:62px}
+.nav .logo{flex:none}
+.nav .logo img{height:20px;width:auto;display:block}
+.links{display:flex;gap:6px;list-style:none;margin:0 auto;padding:0}
+.links a{position:relative;display:flex;align-items:baseline;gap:7px;padding:10px 14px;font-family:Jost,sans-serif;font-weight:500;font-size:15px;color:rgba(255,255,255,.72);transition:color .3s var(--ease)}
+.links a small{font-size:10px;font-weight:700;letter-spacing:.14em;color:rgba(184,246,13,.55);transition:color .3s var(--ease)}
+.links a::after{content:"";position:absolute;left:14px;right:14px;bottom:2px;height:2px;border-radius:2px;background:var(--lime);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+.links a:hover,.links a.on{color:#fff}
+.links a:hover small,.links a.on small{color:var(--lime)}
+.links a:hover::after,.links a.on::after{transform:scaleX(1)}
+.nav-cta{display:flex;align-items:center;gap:20px;flex:none}
+.nav-cta .login{font-family:Jost,sans-serif;font-weight:500;font-size:15px;color:rgba(255,255,255,.8);transition:color .3s var(--ease)}
+.nav-cta .login:hover{color:var(--lime)}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:11px 12px 11px 20px;border-radius:999px;background:var(--lime);color:#0a0a0c;font-family:Jost,sans-serif;font-weight:700;font-size:14px;transition:background .3s var(--ease),transform .3s var(--ease)}
+.pill i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#0a0a0c;color:var(--lime);font-style:normal;font-size:13px;transition:transform .45s var(--ease)}
+.pill:hover{background:#d4ff4f}
+.pill:hover i{transform:translateY(2px)}
+.menu-toggle{display:none;margin-left:auto;align-items:center;gap:10px;background:none;border:1px solid rgba(255,255,255,.18);border-radius:999px;color:#fff;padding:9px 16px;font-family:Jost,sans-serif;font-weight:600;font-size:14px;letter-spacing:.04em}
+.menu-toggle b{position:relative;width:8px;height:8px;border-radius:50%;background:var(--lime);transition:transform .4s var(--ease)}
+.topbar.open .menu-toggle b{transform:scale(1.6)}
+.sheet{display:none}
+@media (max-width:960px){
+  .links,.nav-cta{display:none}
+  .menu-toggle{display:inline-flex}
+  .nav,.topbar.solid .nav{height:64px}
+  .sheet{display:flex;flex-direction:column;position:fixed;inset:0;z-index:-2;padding:calc(96px + env(safe-area-inset-top,0px)) 24px calc(28px + env(safe-area-inset-bottom,0px));background:rgba(10,10,12,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    opacity:0;visibility:hidden;transition:opacity .4s var(--ease),visibility 0s .4s}
+  .topbar.open .sheet{opacity:1;visibility:visible;transition:opacity .4s var(--ease),visibility 0s}
+  .sheet ol{list-style:none;margin:0;padding:0;display:grid}
+  .sheet ol a{display:flex;align-items:baseline;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.08);font-family:Jost,sans-serif;font-weight:600;font-size:28px;color:#fff;
+    opacity:0;transform:translateY(14px);transition:opacity .45s var(--ease),transform .55s var(--ease),color .3s}
+  .sheet ol a small{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--lime)}
+  .sheet ol a:hover{color:var(--lime)}
+  .topbar.open .sheet ol a{opacity:1;transform:none}
+  .topbar.open .sheet ol li:nth-child(2) a{transition-delay:.05s}
+  .topbar.open .sheet ol li:nth-child(3) a{transition-delay:.1s}
+  .topbar.open .sheet ol li:nth-child(4) a{transition-delay:.15s}
+  .sheet .sheet-cta{margin-top:auto;display:grid;gap:12px}
+  .sheet .sheet-cta .pill{justify-content:space-between;padding:15px 14px 15px 22px;font-size:16px}
+  .sheet .sheet-cta .login{text-align:center;padding:12px;font-family:Jost,sans-serif;font-weight:500;color:rgba(255,255,255,.8)}
+  .topbar.open{background:transparent;border-bottom-color:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .topbar.open .prog{opacity:0}
+}
+body.lock{overflow:hidden}
+body.lock .sup-btn,body.lock .sup{visibility:hidden}
 
 /* hero */
-.hero{padding:160px 0 0}
+.hero{padding:150px 0 0}
 .hero-top{display:grid;grid-template-columns:1fr 392px;gap:48px;align-items:end}
 .hero h1{font-size:clamp(56px,8.6vw,108px);line-height:.96;text-transform:uppercase;margin:24px 0 28px}
 .hero .sub{font-size:20px}
@@ -295,7 +322,7 @@ details p .tw-cursor{display:inline-block;width:8px;height:1.05em;margin-left:2p
 
 /* ===== cursor no estilo de jogo: seta lapidada e manopla (arte própria) ===== */
 html,body{cursor:url("assets/cursor/arrow.svg") 3 2,auto}
-a,button,summary,label,[role="button"],.btn,.switch,.chips button,.sup-btn,.menu-btn{cursor:url("assets/cursor/hand.svg") 4 4,pointer!important}
+a,button,summary,label,[role="button"],.btn,.switch,.chips button,.sup-btn,.menu-toggle{cursor:url("assets/cursor/hand.svg") 4 4,pointer!important}
 input,textarea{cursor:text}
 html{scrollbar-width:thin;scrollbar-color:#a87a2c #0a0a0c}
 ::-webkit-scrollbar{width:12px;height:12px}
@@ -360,25 +387,36 @@ details[open].fx:hover summary::after{transform:none}
 </head>
 <body>
 
-<header class="topbar">
+<header class="topbar" id="topbar">
   <div class="wrap">
-    <nav class="nav" id="nav" aria-label="Menu principal">
+    <nav class="nav" aria-label="Menu principal">
       <a class="logo" href="#topo" aria-label="DeepLoL, início"><img src="assets/logo.svg" alt="DeepLoL" width="156" height="20"></a>
-      <button class="menu-btn" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
-      <div class="menu" id="menu">
-        <ul>
-          <li><a href="#como-funciona">Como funciona <small>02</small></a></li>
-          <li><a href="#modulos">Módulos <small>03</small></a></li>
-          <li><a href="#planos">Planos <small>05</small></a></li>
-          <li><a href="#duvidas">Dúvidas <small>06</small></a></li>
-        </ul>
-        <div class="actions">
-          <a class="btn secondary" href="#entrar">Entrar</a>
-          <a class="btn primary" href="#planos">Baixar grátis</a>
-        </div>
+      <ul class="links">
+        <li><a href="#como-funciona"><small>02</small>Como funciona</a></li>
+        <li><a href="#modulos"><small>03</small>Módulos</a></li>
+        <li><a href="#planos"><small>05</small>Planos</a></li>
+        <li><a href="#duvidas"><small>06</small>Dúvidas</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a class="login" href="#entrar">Entrar</a>
+        <a class="pill" href="#planos">Baixar grátis <i aria-hidden="true">↓</i></a>
       </div>
+      <button class="menu-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="sheet"><b aria-hidden="true"></b><span>Menu</span></button>
     </nav>
   </div>
+  <div class="sheet" id="sheet">
+    <ol>
+      <li><a href="#como-funciona"><small>02</small>Como funciona</a></li>
+      <li><a href="#modulos"><small>03</small>Módulos</a></li>
+      <li><a href="#planos"><small>05</small>Planos</a></li>
+      <li><a href="#duvidas"><small>06</small>Dúvidas</a></li>
+    </ol>
+    <div class="sheet-cta">
+      <a class="pill" href="#planos">Baixar grátis <i aria-hidden="true">↓</i></a>
+      <a class="login" href="#entrar">Já tenho conta · Entrar</a>
+    </div>
+  </div>
+  <span class="prog" aria-hidden="true"></span>
 </header>
 
 <main id="topo">
@@ -642,13 +680,18 @@ mods.forEach(([t,d],i)=>{const el=document.createElement('div');el.className='pa
   f.addEventListener('load',()=>setTimeout(()=>box.closest('.hero').classList.add('has-video'),1800));
   box.appendChild(f);fit();addEventListener('resize',fit);
 })();
-// menu flutuante
-(()=>{const nav=document.getElementById('nav'),btn=document.getElementById('menu-btn');
-  const set=o=>{nav.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);btn.setAttribute('aria-label',o?'Fechar menu':'Abrir menu')};
-  btn.onclick=e=>{e.stopPropagation();set(!nav.classList.contains('open'))};
-  nav.querySelectorAll('.menu a').forEach(a=>a.addEventListener('click',()=>set(false)));
-  document.addEventListener('click',e=>{if(!nav.contains(e.target))set(false)});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'){set(false);btn.focus()}});
+// barra do topo: estado ao rolar, progresso, seção ativa e menu mobile
+(()=>{const bar=document.getElementById('topbar'),btn=document.getElementById('menu-btn'),lbl=btn.querySelector('span');
+  const tick=()=>{const y=scrollY,max=document.documentElement.scrollHeight-innerHeight;bar.classList.toggle('solid',y>40);bar.style.setProperty('--p',max>0?Math.min(1,y/max):0)};
+  addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+  const set=o=>{bar.classList.toggle('open',o);document.body.classList.toggle('lock',o);btn.setAttribute('aria-expanded',o);btn.setAttribute('aria-label',o?'Fechar menu':'Abrir menu');lbl.textContent=o?'Fechar':'Menu'};
+  btn.onclick=()=>set(!bar.classList.contains('open'));
+  bar.querySelectorAll('.sheet a').forEach(a=>a.addEventListener('click',()=>set(false)));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&bar.classList.contains('open')){set(false);btn.focus()}});
+  addEventListener('resize',()=>{if(innerWidth>960)set(false)});
+  const links=[...bar.querySelectorAll('.links a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target);links.forEach((a,j)=>a.classList.toggle('on',j===i))}})},{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(s=>s&&io.observe(s));
 })();
 // ===== hover fluido: brilho que segue o mouse dentro dos cards =====
 document.querySelectorAll('.panel').forEach(el=>{
