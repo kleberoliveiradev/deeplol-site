@@ -68,16 +68,18 @@ html{scroll-padding-top:96px}
 .nav .logo{flex:none}
 .nav .logo img{height:20px;width:auto;display:block}
 .brand{position:relative;display:flex;align-items:center;gap:22px;min-width:0}
-.menu-toggle{display:inline-flex;align-items:center;gap:10px;flex:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.16);border-radius:999px;color:#fff;padding:8px 16px 8px 13px;font-family:Jost,sans-serif;font-weight:600;font-size:14px;letter-spacing:.04em;transition:border-color .3s var(--ease),background .3s var(--ease)}
-.menu-toggle:hover{border-color:var(--lime);background:rgba(184,246,13,.08)}
-.menu-toggle b{width:8px;height:8px;border-radius:50%;background:var(--lime);transition:transform .4s var(--ease)}
-.topbar.open .menu-toggle{border-color:var(--lime)}
-.topbar.open .menu-toggle b{transform:scale(1.5)}
-.drop{position:absolute;top:calc(100% + 14px);left:0;min-width:270px;padding:8px;background:#111114;border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.5);
+.menu-toggle{display:inline-flex;align-items:center;gap:10px;flex:none;border:0;background:#222226;color:#fff;padding:12px 18px 12px 14px;font-family:Anton,Impact,sans-serif;font-size:15px;letter-spacing:.06em;text-transform:uppercase;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);transition:transform .45s var(--ease),background .3s var(--ease),color .3s var(--ease)}
+.menu-toggle svg{width:18px;height:18px}
+.menu-toggle .pulse{width:8px;height:8px;flex:none;background:var(--lime);border-radius:50%;animation:supPulse 1.6s infinite}
+.menu-toggle:hover{transform:translateY(-3px);background:#2c2c31}
+.topbar.open .menu-toggle{background:var(--lime);color:#0a0a0c}
+.topbar.open .menu-toggle .pulse{background:#0a0a0c}
+.drop{position:absolute;top:calc(100% + 14px);left:0;min-width:270px;padding:8px;background:#111114;border-left:3px solid var(--lime);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%);
   opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .3s var(--ease),transform .4s var(--ease),visibility 0s .4s}
 .topbar.open .drop{opacity:1;visibility:visible;transform:none;transition:opacity .3s var(--ease),transform .4s var(--ease),visibility 0s}
 .drop ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
-.drop a{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-radius:12px;font-family:Jost,sans-serif;font-weight:500;font-size:17px;color:rgba(255,255,255,.85);transition:background .25s var(--ease),color .25s var(--ease)}
+.drop a{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;font-family:Jost,sans-serif;font-weight:500;font-size:17px;color:rgba(255,255,255,.85);transition:background .25s var(--ease),color .25s var(--ease)}
 .drop a::after{content:"→";color:var(--lime);opacity:0;transform:translateX(-6px);transition:opacity .25s var(--ease),transform .35s var(--ease)}
 .drop a:hover{background:rgba(255,255,255,.05);color:#fff}
 .drop a:hover::after{opacity:1;transform:none}
@@ -92,7 +94,7 @@ html{scroll-padding-top:96px}
 .pill .pulse{width:8px;height:8px;flex:none;background:#0a0a0c;border-radius:50%;animation:supPulse 1.6s infinite}
 @media (max-width:960px){.nav,.topbar.solid .nav{height:64px}}
 @media (max-width:520px){.nav{gap:12px}.nav .logo{min-width:0}.nav .logo img{height:16px;max-width:100%}.nav-cta{gap:14px}.nav-cta .login{font-size:14px}.nav-cta .pill{font-size:13px;padding:11px 14px 11px 12px;gap:8px}.nav-cta .pill .pulse{display:none}.nav-cta .pill svg{width:17px;height:17px}}
-@media (max-width:520px){.brand{gap:12px}.nav-cta .login{display:none}.drop .m-only{display:block}.menu-toggle{padding:7px 13px 7px 11px;font-size:13px}}
+@media (max-width:520px){.brand{gap:12px}.nav-cta .login{display:none}.drop .m-only{display:block}.menu-toggle{padding:11px 13px 11px 11px;font-size:13px;gap:8px}.menu-toggle .pulse{display:none}}
 @media (max-width:370px){.nav-cta .pill svg{display:none}.nav .logo img{height:14px}}
 
 /* hero */
@@ -360,6 +362,12 @@ details[open].fx:hover summary::after{transform:none}
 .btn.primary:hover::after{left:130%}
 .btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px -8px rgba(184,246,13,.55)}
 .btn:active{transform:translateY(0) scale(.98);transition-duration:.12s}
+/* padrão único de botão: igual ao botão de Suporte (canto superior direito cortado, Anton caixa alta) */
+.btn{font-size:15px;padding:14px 22px;border:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+.btn:hover{transform:translateY(-3px);box-shadow:none}
+.btn.primary:hover{background:#d4ff4f}
+.btn.secondary{background:#222226;color:var(--lime)}
+.btn.ghost{background:#222226;color:#fff}
 /* links do menu e rodapé */
 .f1 ul a{position:relative;transition:color .35s var(--ease)}
 .f1 ul a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--lime);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
@@ -387,7 +395,7 @@ details[open].fx:hover summary::after{transform:none}
     <nav class="nav" aria-label="Menu principal">
       <div class="brand">
         <a class="logo" href="#topo" aria-label="DeepLoL, início"><img src="assets/logo.svg" alt="DeepLoL" width="156" height="20"></a>
-        <button class="menu-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="drop"><b aria-hidden="true"></b><span>Menu</span></button>
+        <button class="menu-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="drop"><span class="pulse" aria-hidden="true"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span class="t">Menu</span></button>
         <div class="drop" id="drop">
           <ul>
             <li><a href="#como-funciona">Como funciona</a></li>
@@ -670,7 +678,7 @@ mods.forEach(([t,d],i)=>{const el=document.createElement('div');el.className='pa
   box.appendChild(f);fit();addEventListener('resize',fit);
 })();
 // barra do topo: fica sólida ao rolar + menu que abre e fecha
-(()=>{const bar=document.getElementById('topbar'),btn=document.getElementById('menu-btn'),drop=document.getElementById('drop'),lbl=btn.querySelector('span');
+(()=>{const bar=document.getElementById('topbar'),btn=document.getElementById('menu-btn'),drop=document.getElementById('drop'),lbl=btn.querySelector('.t');
   const tick=()=>bar.classList.toggle('solid',scrollY>40);addEventListener('scroll',tick,{passive:true});tick();
   const set=o=>{bar.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);btn.setAttribute('aria-label',o?'Fechar menu':'Abrir menu');lbl.textContent=o?'Fechar':'Menu'};
   btn.onclick=e=>{e.stopPropagation();set(!bar.classList.contains('open'))};
