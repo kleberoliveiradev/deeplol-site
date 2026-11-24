@@ -63,15 +63,25 @@ html{scroll-padding-top:96px}
 .topbar::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,10,12,.75),rgba(10,10,12,0));transition:opacity .5s var(--ease)}
 .topbar.solid{background:rgba(10,10,12,.82);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);border-bottom-color:rgba(255,255,255,.07)}
 .topbar.solid::before{opacity:0}
-.nav{display:flex;align-items:center;gap:32px;height:76px;transition:height .5s var(--ease)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:32px;height:76px;transition:height .5s var(--ease)}
 .topbar.solid .nav{height:62px}
 .nav .logo{flex:none}
 .nav .logo img{height:20px;width:auto;display:block}
-.links{display:flex;gap:6px;list-style:none;margin:0 auto;padding:0}
-.links a{position:relative;display:flex;align-items:baseline;gap:7px;padding:10px 14px;font-family:Jost,sans-serif;font-weight:500;font-size:15px;color:rgba(255,255,255,.72);transition:color .3s var(--ease)}
-.links a::after{content:"";position:absolute;left:14px;right:14px;bottom:2px;height:2px;border-radius:2px;background:var(--lime);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
-.links a:hover,.links a.on{color:#fff}
-.links a:hover::after,.links a.on::after{transform:scaleX(1)}
+.brand{position:relative;display:flex;align-items:center;gap:22px;min-width:0}
+.menu-toggle{display:inline-flex;align-items:center;gap:10px;flex:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.16);border-radius:999px;color:#fff;padding:8px 16px 8px 13px;font-family:Jost,sans-serif;font-weight:600;font-size:14px;letter-spacing:.04em;transition:border-color .3s var(--ease),background .3s var(--ease)}
+.menu-toggle:hover{border-color:var(--lime);background:rgba(184,246,13,.08)}
+.menu-toggle b{width:8px;height:8px;border-radius:50%;background:var(--lime);transition:transform .4s var(--ease)}
+.topbar.open .menu-toggle{border-color:var(--lime)}
+.topbar.open .menu-toggle b{transform:scale(1.5)}
+.drop{position:absolute;top:calc(100% + 14px);left:0;min-width:270px;padding:8px;background:#111114;border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.5);
+  opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .3s var(--ease),transform .4s var(--ease),visibility 0s .4s}
+.topbar.open .drop{opacity:1;visibility:visible;transform:none;transition:opacity .3s var(--ease),transform .4s var(--ease),visibility 0s}
+.drop ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.drop a{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-radius:12px;font-family:Jost,sans-serif;font-weight:500;font-size:17px;color:rgba(255,255,255,.85);transition:background .25s var(--ease),color .25s var(--ease)}
+.drop a::after{content:"→";color:var(--lime);opacity:0;transform:translateX(-6px);transition:opacity .25s var(--ease),transform .35s var(--ease)}
+.drop a:hover{background:rgba(255,255,255,.05);color:#fff}
+.drop a:hover::after{opacity:1;transform:none}
+.drop .m-only{display:none}
 .nav-cta{display:flex;align-items:center;gap:20px;flex:none}
 .nav-cta .login{font-family:Jost,sans-serif;font-weight:500;font-size:15px;color:rgba(255,255,255,.8);transition:color .3s var(--ease)}
 .nav-cta .login:hover{color:var(--lime)}
@@ -80,32 +90,10 @@ html{scroll-padding-top:96px}
 .pill:hover{transform:translateY(-3px);background:#d4ff4f}
 .pill svg{width:20px;height:20px}
 .pill .pulse{width:8px;height:8px;flex:none;background:#0a0a0c;border-radius:50%;animation:supPulse 1.6s infinite}
-.menu-toggle{display:none;margin-left:auto;align-items:center;gap:10px;background:none;border:1px solid rgba(255,255,255,.18);border-radius:999px;color:#fff;padding:9px 16px;font-family:Jost,sans-serif;font-weight:600;font-size:14px;letter-spacing:.04em}
-.menu-toggle b{position:relative;width:8px;height:8px;border-radius:50%;background:var(--lime);transition:transform .4s var(--ease)}
-.topbar.open .menu-toggle b{transform:scale(1.6)}
-.sheet{display:none}
-@media (max-width:960px){
-  .links,.nav-cta{display:none}
-  .menu-toggle{display:inline-flex}
-  .nav,.topbar.solid .nav{height:64px}
-  .sheet{display:flex;flex-direction:column;position:fixed;inset:0;z-index:-2;padding:calc(96px + env(safe-area-inset-top,0px)) 24px calc(28px + env(safe-area-inset-bottom,0px));background:rgba(10,10,12,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-    opacity:0;visibility:hidden;transition:opacity .4s var(--ease),visibility 0s .4s}
-  .topbar.open .sheet{opacity:1;visibility:visible;transition:opacity .4s var(--ease),visibility 0s}
-  .sheet ol{list-style:none;margin:0;padding:0;display:grid}
-  .sheet ol a{display:flex;align-items:baseline;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.08);font-family:Jost,sans-serif;font-weight:600;font-size:28px;color:#fff;
-    opacity:0;transform:translateY(14px);transition:opacity .45s var(--ease),transform .55s var(--ease),color .3s}
-  .sheet ol a:hover{color:var(--lime)}
-  .topbar.open .sheet ol a{opacity:1;transform:none}
-  .topbar.open .sheet ol li:nth-child(2) a{transition-delay:.05s}
-  .topbar.open .sheet ol li:nth-child(3) a{transition-delay:.1s}
-  .topbar.open .sheet ol li:nth-child(4) a{transition-delay:.15s}
-  .sheet .sheet-cta{margin-top:auto;display:grid;gap:12px}
-  .sheet .sheet-cta .pill{justify-content:center;padding:16px 20px;font-size:17px}
-  .sheet .sheet-cta .login{text-align:center;padding:12px;font-family:Jost,sans-serif;font-weight:500;color:rgba(255,255,255,.8)}
-  .topbar.open{background:transparent;border-bottom-color:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
-}
-body.lock{overflow:hidden}
-body.lock .sup-btn,body.lock .sup{visibility:hidden}
+@media (max-width:960px){.nav,.topbar.solid .nav{height:64px}}
+@media (max-width:520px){.nav{gap:12px}.nav .logo{min-width:0}.nav .logo img{height:16px;max-width:100%}.nav-cta{gap:14px}.nav-cta .login{font-size:14px}.nav-cta .pill{font-size:13px;padding:11px 14px 11px 12px;gap:8px}.nav-cta .pill .pulse{display:none}.nav-cta .pill svg{width:17px;height:17px}}
+@media (max-width:520px){.brand{gap:12px}.nav-cta .login{display:none}.drop .m-only{display:block}.menu-toggle{padding:7px 13px 7px 11px;font-size:13px}}
+@media (max-width:370px){.nav-cta .pill svg{display:none}.nav .logo img{height:14px}}
 
 /* hero */
 .hero{padding:150px 0 0}
@@ -388,31 +376,24 @@ details[open].fx:hover summary::after{transform:none}
 <header class="topbar" id="topbar">
   <div class="wrap">
     <nav class="nav" aria-label="Menu principal">
-      <a class="logo" href="#topo" aria-label="DeepLoL, início"><img src="assets/logo.svg" alt="DeepLoL" width="156" height="20"></a>
-      <ul class="links">
-        <li><a href="#como-funciona">Como funciona</a></li>
-        <li><a href="#modulos">Módulos</a></li>
-        <li><a href="#planos">Planos</a></li>
-        <li><a href="#duvidas">Dúvidas</a></li>
-      </ul>
+      <div class="brand">
+        <a class="logo" href="#topo" aria-label="DeepLoL, início"><img src="assets/logo.svg" alt="DeepLoL" width="156" height="20"></a>
+        <button class="menu-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="drop"><b aria-hidden="true"></b><span>Menu</span></button>
+        <div class="drop" id="drop">
+          <ul>
+            <li><a href="#como-funciona">Como funciona</a></li>
+            <li><a href="#modulos">Módulos</a></li>
+            <li><a href="#planos">Planos</a></li>
+            <li><a href="#duvidas">Dúvidas</a></li>
+            <li class="m-only"><a href="#entrar">Entrar</a></li>
+          </ul>
+        </div>
+      </div>
       <div class="nav-cta">
         <a class="login" href="#entrar">Entrar</a>
         <a class="pill" href="#planos"><span class="pulse" aria-hidden="true"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Baixar grátis</a>
       </div>
-      <button class="menu-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="sheet"><b aria-hidden="true"></b><span>Menu</span></button>
     </nav>
-  </div>
-  <div class="sheet" id="sheet">
-    <ol>
-      <li><a href="#como-funciona">Como funciona</a></li>
-      <li><a href="#modulos">Módulos</a></li>
-      <li><a href="#planos">Planos</a></li>
-      <li><a href="#duvidas">Dúvidas</a></li>
-    </ol>
-    <div class="sheet-cta">
-      <a class="pill" href="#planos"><span class="pulse" aria-hidden="true"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Baixar grátis</a>
-      <a class="login" href="#entrar">Já tenho conta · Entrar</a>
-    </div>
   </div>
 </header>
 
@@ -678,18 +659,14 @@ mods.forEach(([t,d],i)=>{const el=document.createElement('div');el.className='pa
   f.addEventListener('load',()=>setTimeout(()=>box.closest('.hero').classList.add('has-video'),1800));
   box.appendChild(f);fit();addEventListener('resize',fit);
 })();
-// barra do topo: estado ao rolar, seção ativa e menu mobile
-(()=>{const bar=document.getElementById('topbar'),btn=document.getElementById('menu-btn'),lbl=btn.querySelector('span');
-  const tick=()=>bar.classList.toggle('solid',scrollY>40);
-  addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
-  const set=o=>{bar.classList.toggle('open',o);document.body.classList.toggle('lock',o);btn.setAttribute('aria-expanded',o);btn.setAttribute('aria-label',o?'Fechar menu':'Abrir menu');lbl.textContent=o?'Fechar':'Menu'};
-  btn.onclick=()=>set(!bar.classList.contains('open'));
-  bar.querySelectorAll('.sheet a').forEach(a=>a.addEventListener('click',()=>set(false)));
+// barra do topo: fica sólida ao rolar + menu que abre e fecha
+(()=>{const bar=document.getElementById('topbar'),btn=document.getElementById('menu-btn'),drop=document.getElementById('drop'),lbl=btn.querySelector('span');
+  const tick=()=>bar.classList.toggle('solid',scrollY>40);addEventListener('scroll',tick,{passive:true});tick();
+  const set=o=>{bar.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);btn.setAttribute('aria-label',o?'Fechar menu':'Abrir menu');lbl.textContent=o?'Fechar':'Menu'};
+  btn.onclick=e=>{e.stopPropagation();set(!bar.classList.contains('open'))};
+  drop.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>set(false)));
+  document.addEventListener('click',e=>{if(!drop.contains(e.target))set(false)});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&bar.classList.contains('open')){set(false);btn.focus()}});
-  addEventListener('resize',()=>{if(innerWidth>960)set(false)});
-  const links=[...bar.querySelectorAll('.links a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
-  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target);links.forEach((a,j)=>a.classList.toggle('on',j===i))}})},{rootMargin:'-45% 0px -50% 0px'});
-  secs.forEach(s=>s&&io.observe(s));
 })();
 // logo gigante do rodapé sobe quando aparece
 (()=>{const m=document.getElementById('f-mark');if(!('IntersectionObserver' in window)){m.classList.add('in');return}
